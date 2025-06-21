@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Neon Brick Wall of Text </title>
+  <link rel="stylesheet" href="./style.css">
+
+<style>
+:root {
+	--author: "Matt Cannon";
+	--contact: "mc@mattcannon.design";
+	--description: "Glowing neon words set against a perspective brick wall. The combination of bold typography, vibrant animations, and textured design creates an immersive visual experience.";
+	--keywords: "neon text, typography, text animation, CSS art, glowing words, Houdini quote, wall of text, artistic design";
+	--last-modified: "2024-11-19";
+	--content-language: "en";
+	--generator: "HTML5, CSS3, JavaScript, Keyframes Animation";
+	--title: "Neon Wall of Text";
+}
+
+@font-face {
+	font-family: "neontubes2";
+	src: url("https://mattcannon.games/codepen/wall-of-text/neon-tubes-2.eot");
+	src: url("https://mattcannon.games/codepen/wall-of-text/neon-tubes-2.eot?#iefix")
+			format("embedded-opentype"),
+		url("https://mattcannon.games/codepen/wall-of-text/neon-tubes-2.woff2")
+			format("woff2"),
+		url("https://mattcannon.games/codepen/wall-of-text/neon-tubes-2.ttf")
+			format("truetype"),
+		url("https://mattcannon.games/codepen/wall-of-text/neon-tubes-2.otf")
+			format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background: #000;
+	font-family: "neontubes2", sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	overflow: hidden;
+	perspective: 1200px;
+}
+
+.container {
+	transform: rotateY(-40deg);
+	transform-origin: center;
+	width: 200vw;
+	height: 200vh;
+	background: linear-gradient(
+			90deg,
+			black 0%,
+			rgba(0, 0, 0, 0) 40%,
+			rgba(0, 0, 0, 0) 60%,
+			black 100%
+		),
+		linear-gradient(
+			180deg,
+			black 0%,
+			rgba(0, 0, 0, 0) 40%,
+			rgba(0, 0, 0, 0) 60%,
+			black 100%
+		),
+		url("https://mattcannon.games/codepen/wall-of-text/brick-wall.jpg");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	position: relative;
+	margin: -50vh -50vw;
+}
+
+.container::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		to right,
+		transparent 0%,
+		transparent 80%,
+		rgba(0, 0, 0, 0.8) 100%
+	);
+	pointer-events: none;
+	opacity: 1;
+	z-index: 2;
+}
+
+.neon-wall {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
+.quote-wrapper {
+	width: 50%;
+	text-align: center;
+	line-height: 1.2;
+	margin-bottom: 2rem;
+}
+
+.neon {
+	font-size: 5vw;
+	text-transform: uppercase;
+	color: #fff;
+	text-shadow: 0 0 8px rgba(255, 255, 255, 1), 0 0 15px rgba(255, 0, 108, 1),
+		0 0 30px rgba(255, 0, 108, 0.9), 0 0 40px rgba(255, 0, 108, 0.8),
+		0 0 60px rgba(255, 0, 108, 0.7);
+	animation: neon-flicker 6s infinite;
+}
+
+.author {
+	font-size: 3.5vw;
+	margin-top: 3rem;
+	color: #fff;
+	text-shadow: 0 0 8px rgba(255, 255, 255, 1), 0 0 15px rgba(0, 255, 255, 1),
+		0 0 30px rgba(0, 255, 255, 0.9), 0 0 40px rgba(0, 255, 255, 0.8),
+		0 0 60px rgba(0, 255, 255, 0.7);
+	animation: author-flicker 7s infinite;
+}
+
+@keyframes neon-flicker {
+	0%,
+	39%,
+	41%,
+	59%,
+	61%,
+	100% {
+		text-shadow: 0 0 8px rgba(255, 255, 255, 1), 0 0 15px rgba(255, 0, 108, 1),
+			0 0 30px rgba(255, 0, 108, 0.9), 0 0 40px rgba(255, 0, 108, 0.8),
+			0 0 60px rgba(255, 0, 108, 0.7);
+	}
+	40%,
+	60% {
+		text-shadow: 0 0 4px rgba(255, 255, 255, 0.9), 0 0 10px rgba(255, 0, 108, 0.8),
+			0 0 20px rgba(255, 0, 108, 0.7), 0 0 30px rgba(255, 0, 108, 0.6);
+	}
+	85%,
+	85.5%,
+	86% {
+		text-shadow: none;
+	}
+}
+
+@keyframes author-flicker {
+	0%,
+	19%,
+	21%,
+	79%,
+	81%,
+	100% {
+		text-shadow: 0 0 8px rgba(255, 255, 255, 1), 0 0 15px rgba(0, 255, 255, 1),
+			0 0 30k rgba(0, 255, 255, 0.9), 0 0 40k rgba(0, 255, 255, 0.8),
+			0 0 60k rgba(0, 255, 255, 0.7);
+	}
+	20%,
+	80% {
+		text-shadow: 0 0 4px rgba(255, 255, 255, 0.9), 0 0 10k rgba(0, 255, 255, 0.8),
+			0 0 20k rgba(0, 255, 255, 0.7), 0 0 30k rgba(0, 255, 255, 0.6);
+	}
+	92%,
+	92.5%,
+	93% {
+		text-shadow: none;
+	}
+}
+</style>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="container">
+	<div class="neon-wall">
+		<div class="quote-wrapper">
+			<h1 class="neon">Never tell the audience</h1>
+			<h1 class="neon">how good you are.</h1>
+			<h1 class="neon">They will soon find out</h1>
+			<h1 class="neon">for themselves.</h1>
+			<h4 class="author">Harry Houdini</h4>
+		</div>
+	</div>
+</div>
+<!-- partial -->
+  
+
+</body>
+</html>
