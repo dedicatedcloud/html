@@ -1,2 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select2 Option Generator with Preview & Export</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2em;
+      max-width: 900px;
+      margin: auto;
+      background-color: #f9f9f9;
+    }
 
-
+    textarea, pre, button, select {
+      width: 100%;
+      margin-top: 1em;
+      font-size: 1em;
+    }
+
+    textarea {
+      height: 200px;
+    }
+
+    pre {
+      background-color: #fff;
+      padding: 1em;
+      border: 1px solid #ccc;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    button {
+      padding: 0.75em;
+      margin-top: 0.5em;
+      margin-right: 0.5em;
+      background-color: #007bc7;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Select2 Option Generator</h1>
+
+  <label for="input">Enter items (one per line):<br>
+    <small>Format: <code>Label</code> or <code>Label|value</code></small>
+  </label>
+  <textarea id="input" placeholder="Alabama&#10;Chesterfield Borough Council&#10;London & South|london-south&#10;AL|AL"></textarea>
+
+  <div class="button-row">
+    <button onclick="generateOptions()">Generate Options</button>
+    <button onclick="copyToClipboard()">Copy to Clipboard</button>
+    <button onclick="downloadAsHTML()">Download as .html</button>
+  </div>
+
+  <label for="output">Generated HTML:</label>
+  <pre id="output"></pre>
+
+  <label for="preview">Live Preview:</label>
+  <select id="preview" class="js-select2" style="width: 100%;"></select>
+
+  <!-- JS Dependencies -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <script>
+    function slugify(str) {
+      return str
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')    // remove special chars
+        .replace(/\s+/g, '-')        // replace space with hyphen
+        .replace(/-+/g, '-');        // remove extra hyphens
+    }
+
+    function generateOptions() {
+      const input = document.getElementById('input').value;
+      const lines = input.split('\n').map(line => line.trim()).filter(Boolean);
+
+      const options = lines.map(line => {
+        let [label, value] = line.split('|').map(s => s.trim());
+        if (!value) value = slugify(label);
+        return `<option value="${value}">${label}</option>`;
+      });
+
+      const html = options.join('\n');
+      document.getElementById('output').textContent = html;
+
+      // Update live preview
+      const select = document.getElementById('preview');
+      select.innerHTML = options.join('');
+      $('.js-select2').select2();
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied to clipboard!");
+      }).catch(err => {
+        alert("Copy failed: " + err);
+      });
+    }
+
+    function downloadAsHTML() {
+      const content = document.getElementById('output').textContent;
+      const blob = new Blob([content], { type: 'text/html' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'select2-options.html';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+
+</body>
+</html>
+
