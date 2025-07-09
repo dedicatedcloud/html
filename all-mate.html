@@ -1,2 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Allergen Alert Travel Companion</title>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0ea5e9">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      /* For a more subtle scrollbar */
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #f1f1f1; }
+      ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #555; }
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const { useState, useEffect } = React;
 
-
+      // --- START: DATA & HELPERS ---
+
+      // From hooks/useLocalStorage.ts
+      function useLocalStorage(key, initialValue) {
+        const [storedValue, setStoredValue] = useState(() => {
+          try {
+            const item = window.localStorage.getItem(key);
+            return item ? JSON.parse(item) : initialValue;
+          } catch (error) {
+            console.error(error);
+            return initialValue;
+          }
+        });
+
+        const setValue = (value) => {
+          try {
+            const valueToStore = value instanceof Function ? value(storedValue) : value;
+            setStoredValue(valueToStore);
+            window.localStorage.setItem(key, JSON.stringify(valueToStore));
+          } catch (error) {
+            console.error(error);
+          }
+        };
+
+        return [storedValue, setValue];
+      }
+
+      // From translations.ts
+      const ALLERGENS_LIST = [ 'Celery', 'Cereals containing gluten', 'Crustaceans', 'Eggs', 'Fish', 'Lupin', 'Milk', 'Molluscs', 'Mustard', 'Nuts', 'Peanuts', 'Sesame seeds', 'Soya', 'Sulphur dioxide' ];
+      const translations = {
+        "English": {
+          instruction: "I am allergic to the items listed below. Please ensure that none of these allergens are present in my meal and that steps are taken to avoid cross-contamination. Thank you.",
+          allergyTitle: "I AM ALLERGIC TO:",
+          emergencyAlert: "I have experienced an allergic reaction. Please call emergency services immediately.",
+          allergens: { "Celery": "Celery", "Cereals containing gluten": "Cereals containing gluten", "Crustaceans": "Crustaceans", "Eggs": "Eggs", "Fish": "Fish", "Lupin": "Lupin", "Milk": "Milk", "Molluscs": "Molluscs", "Mustard": "Mustard", "Nuts": "Nuts", "Peanuts": "Peanuts", "Sesame seeds": "Sesame seeds", "Soya": "Soya", "Sulphur dioxide": "Sulphur dioxide" }
+        },
+        "Spanish": {
+          instruction: "Soy alérgico a los artículos que se enumeran a continuación. Por favor, asegúrese de que ninguno de estos alérgenos esté presente en mi comida y de que se tomen medidas para evitar la contaminación cruzada. Gracias.",
+          allergyTitle: "SOY ALÉRGICO A:",
+          emergencyAlert: "He experimentado una reacción alérgica. Por favor, llame a los servicios de emergencia de inmediato.",
+          allergens: { "Celery": "Apio", "Cereals containing gluten": "Cereales con gluten", "Crustaceans": "Crustáceos", "Eggs": "Huevos", "Fish": "Pescado", "Lupin": "Altramuces", "Milk": "Leche", "Molluscs": "Moluscos", "Mustard": "Mostaza", "Nuts": "Frutos de cáscara", "Peanuts": "Cacahuetes", "Sesame seeds": "Semillas de sésamo", "Soya": "Soja", "Sulphur dioxide": "Dióxido de azufre" }
+        },
+        "French": {
+          instruction: "Je suis allergique aux produits listés ci-dessous. Veuillez vous assurer qu'aucun de ces allergènes n'est présent dans mon repas et que des mesures sont prises pour éviter la contamination croisée. Merci.",
+          allergyTitle: "JE SUIS ALLERGIQUE À :",
+          emergencyAlert: "J'ai eu une réaction allergique. Veuillez appeler les services d'urgence immédiatement.",
+          allergens: { "Celery": "Céleri", "Cereals containing gluten": "Céréales contenant du gluten", "Crustaceans": "Crustacés", "Eggs": "Œufs", "Fish": "Poisson", "Lupin": "Lupin", "Milk": "Lait", "Molluscs": "Mollusques", "Mustard": "Moutarde", "Nuts": "Fruits à coque", "Peanuts": "Arachides", "Sesame seeds": "Graines de sésame", "Soya": "Soja", "Sulphur dioxide": "Dioxyde de soufre" }
+        },
+        "German": {
+          instruction: "Ich bin allergisch gegen die unten aufgeführten Produkte. Bitte stellen Sie sicher, dass keine dieser Allergene in meiner Mahlzeit enthalten sind und dass Maßnahmen zur Vermeidung von Kreuzkontaminationen getroffen werden. Vielen Dank.",
+          allergyTitle: "ICH BIN ALLERGISCH GEGEN:",
+          emergencyAlert: "Ich habe eine allergische Reaktion erlitten. Bitte rufen Sie sofort den Notdienst an.",
+          allergens: { "Celery": "Sellerie", "Cereals containing gluten": "Glutenhaltiges Getreide", "Crustaceans": "Krebstiere", "Eggs": "Eier", "Fish": "Fisch", "Lupin": "Lupinen", "Milk": "Milch", "Molluscs": "Weichtiere", "Mustard": "Senf", "Nuts": "Nüsse", "Peanuts": "Erdnüsse", "Sesame seeds": "Sesamsamen", "Soya": "Soja", "Sulphur dioxide": "Schwefeldioxid" }
+        },
+        "Italian": {
+            "instruction": "Sono allergico agli articoli elencati di seguito. Si prega di assicurarsi che nessuno di questi allergeni sia presente nel mio pasto e che vengano prese misure per evitare la contaminazione incrociata. Grazie.",
+            "allergyTitle": "SONO ALLERGICO A:",
+            "emergencyAlert": "Ho avuto una reazione allergica. Si prega di chiamare immediatamente i servizi di emergenza.",
+            "allergens": { "Celery": "Sedano", "Cereals containing gluten": "Cereali contenenti glutine", "Crustaceans": "Crostacei", "Eggs": "Uova", "Fish": "Pesce", "Lupin": "Lupino", "Milk": "Latte", "Molluscs": "Molluschi", "Mustard": "Senape", "Nuts": "Frutta a guscio", "Peanuts": "Arachidi", "Sesame seeds": "Semi di sesamo", "Soya": "Soia", "Sulphur dioxide": "Anidride solforosa" }
+        },
+        "Japanese": {
+            "instruction": "私は以下に記載されている品目にアレルギーがあります。私の食事にこれらのアレルゲンが含まれていないこと、そして相互汚染を避けるための措置が取られていることを確認してください。ありがとうございます。",
+            "allergyTitle": "私は以下のアレルギーを持っています：",
+            "emergencyAlert": "アレルギー反応が出ました。直ちに救急サービスに電話してください。",
+            "allergens": { "Celery": "セロリ", "Cereals containing gluten": "グルテンを含む穀物", "Crustaceans": "甲殻類", "Eggs": "卵", "Fish": "魚", "Lupin": "ルピナス", "Milk": "牛乳", "Molluscs": "軟体動物", "Mustard": "マスタード", "Nuts": "ナッツ", "Peanuts": "ピーナッツ", "Sesame seeds": "ごま", "Soya": "大豆", "Sulphur dioxide": "二酸化硫黄" }
+        },
+        "Mandarin Chinese": {
+            "instruction": "我对以下列出的物品过敏。请确保我的餐点中不含任何这些过敏原，并采取措施避免交叉污染。谢谢。",
+            "allergyTitle": "我对...过敏：",
+            "emergencyAlert": "我出现了过敏反应。请立即呼叫紧急服务。",
+            "allergens": { "Celery": "芹菜", "Cereals containing gluten": "含麸质的谷物", "Crustaceans": "甲壳类动物", "Eggs": "鸡蛋", "Fish": "鱼", "Lupin": "羽扇豆", "Milk": "牛奶", "Molluscs": "软体动物", "Mustard": "芥末", "Nuts": "坚果", "Peanuts": "花生", "Sesame seeds": "芝麻", "Soya": "大豆", "Sulphur dioxide": "二氧化硫" }
+        },
+        "Portuguese": {
+            "instruction": "Sou alérgico aos itens listados abaixo. Por favor, certifique-se de que nenhum desses alérgenos esteja presente na minha refeição e que medidas sejam tomadas para evitar a contaminação cruzada. Obrigado.",
+            "allergyTitle": "SOU ALÉRGICO A:",
+            "emergencyAlert": "Tive uma reação alérgica. Por favor, chame os serviços de emergência imediatamente.",
+            "allergens": { "Celery": "Aipo", "Cereals containing gluten": "Cereais contendo glúten", "Crustaceans": "Crustáceos", "Eggs": "Ovos", "Fish": "Peixe", "Lupin": "Tremoço", "Milk": "Leite", "Molluscs": "Moluscos", "Mustard": "Mostarda", "Nuts": "Nozes", "Peanuts": "Amendoim", "Sesame seeds": "Sementes de gergelim", "Soya": "Soja", "Sulphur dioxide": "Dióxido de enxofre" }
+        },
+        "Russian": {
+            "instruction": "У меня аллергия на перечисленные ниже продукты. Пожалуйста, убедитесь, что в моей еде нет ни одного из этих аллергенов и приняты меры для предотвращения перекрестного загрязнения. Спасибо.",
+            "allergyTitle": "У МЕНЯ АЛЛЕРГИЯ НА:",
+            "emergencyAlert": "У меня произошла аллергическая реакция. Пожалуйста, немедленно вызовите скорую помощь.",
+            "allergens": { "Celery": "Сельдерей", "Cereals containing gluten": "Злаки, содержащие глютен", "Crustaceans": "Ракообразные", "Eggs": "Яйца", "Fish": "Рыба", "Lupin": "Люпин", "Milk": "Молоко", "Molluscs": "Моллюски", "Mustard": "Горчица", "Nuts": "Орехи", "Peanuts": "Арахис", "Sesame seeds": "Кунжутные семена", "Soya": "Соя", "Sulphur dioxide": "Диоксид серы" }
+        },
+        "Arabic": {
+            "instruction": "لدي حساسية من المواد المذكورة أدناه. يرجى التأكد من عدم وجود أي من هذه المواد المسببة للحساسية في وجبتي واتخاذ الخطوات اللازمة لتجنب التلوث المتبادل. شكراً لكم.",
+            "allergyTitle": "لدي حساسية من:",
+            "emergencyAlert": "لقد تعرضت لرد فعل تحسسي. يرجى الاتصال بخدمات الطوارئ على الفور.",
+            "allergens": { "Celery": "كرفس", "Cereals containing gluten": "حبوب تحتوي على الغلوتين", "Crustaceans": "قشريات", "Eggs": "بيض", "Fish": "سمك", "Lupin": "ترمس", "Milk": "حليب", "Molluscs": "رخويات", "Mustard": "خردل", "Nuts": "مكسرات", "Peanuts": "فول سوداني", "Sesame seeds": "بذور السمسم", "Soya": "صويا", "Sulphur dioxide": "ثاني أكسيد الكبريت" }
+        },
+        "Hindi": {
+            "instruction": "मुझे नीचे सूचीबद्ध वस्तुओं से एलर्जी है। कृपया सुनिश्चित करें कि मेरे भोजन में इनमें से कोई भी एलर्जेन मौजूद न हो और क्रॉस-कंटैमिनेशन से बचने के लिए कदम उठाए जाएं। धन्यवाद।",
+            "allergyTitle": "मुझे इनसे एलर्जी है:",
+            "emergencyAlert": "मुझे एलर्जी की प्रतिक्रिया हुई है। कृपया तुरंत आपातकालीन सेवाओं को बुलाएं।",
+            "allergens": { "Celery": "अजवाइन", "Cereals containing gluten": "ग्लूटेन युक्त अनाज", "Crustaceans": "क्रस्टेशियंस", "Eggs": "अंडे", "Fish": "मछली", "Lupin": "ल्यूपिन", "Milk": "दूध", "Molluscs": "मोलस्क", "Mustard": "सरसों", "Nuts": "मेवे", "Peanuts": "मूंगफली", "Sesame seeds": "तिल के बीज", "Soya": "सोया", "Sulphur dioxide": "सल्फर डाइऑक्साइड" }
+        },
+        "Korean": {
+            "instruction": "저는 아래 목록의 항목에 알레르기가 있습니다. 제 식사에 이러한 알레르겐이 포함되지 않도록 하고 교차 오염을 방지하기 위한 조치를 취해주십시오. 감사합니다.",
+            "allergyTitle": "알레르기 정보:",
+            "emergencyAlert": "알레르기 반응이 일어났습니다. 즉시 응급 서비스에 전화해 주십시오.",
+            "allergens": { "Celery": "셀러리", "Cereals containing gluten": "글루텐 함유 시리얼", "Crustaceans": "갑각류", "Eggs": "계란", "Fish": "생선", "Lupin": "루핀", "Milk": "우유", "Molluscs": "연체 동물", "Mustard": "겨자", "Nuts": "견과류", "Peanuts": "땅콩", "Sesame seeds": "참깨", "Soya": "대두", "Sulphur dioxide": "이산화황" }
+        },
+        "Thai": {
+            "instruction": "ฉันแพ้รายการที่ระบุไว้ด้านล่างนี้ โปรดตรวจสอบให้แน่ใจว่าไม่มีสารก่อภูมิแพ้เหล่านี้ในมื้ออาหารของฉัน และโปรดดำเนินการเพื่อหลีกเลี่ยงการปนเปื้อนข้าม ขอบคุณ",
+            "allergyTitle": "ฉันแพ้:",
+            "emergencyAlert": "ฉันมีอาการแพ้ โปรดเรียกบริการฉุกเฉินทันที",
+            "allergens": { "Celery": "ขึ้นฉ่าย", "Cereals containing gluten": "ธัญพืชที่มีกลูเตน", "Crustaceans": "สัตว์น้ำที่มีเปลือกแข็ง", "Eggs": "ไข่", "Fish": "ปลา", "Lupin": "ลูปิน", "Milk": "นม", "Molluscs": "หอย", "Mustard": "มัสตาร์ด", "Nuts": "ถั่วเปลือกแข็ง", "Peanuts": "ถั่วลิสง", "Sesame seeds": "เมล็ดงา", "Soya": "ถั่วเหลือง", "Sulphur dioxide": "ซัลเฟอร์ไดออกไซด์" }
+        },
+        "Vietnamese": {
+            "instruction": "Tôi bị dị ứng với các món được liệt kê dưới đây. Vui lòng đảm bảo rằng không có chất gây dị ứng nào trong bữa ăn của tôi và thực hiện các bước để tránh lây nhiễm chéo. Cảm ơn bạn.",
+            "allergyTitle": "TÔI BỊ DỊ ỨNG VỚI:",
+            "emergencyAlert": "Tôi đã bị phản ứng dị ứng. Vui lòng gọi dịch vụ cấp cứu ngay lập tức.",
+            "allergens": { "Celery": "Cần tây", "Cereals containing gluten": "Ngũ cốc chứa gluten", "Crustaceans": "Động vật giáp xác", "Eggs": "Trứng", "Fish": "Cá", "Lupin": "Đậu lupin", "Milk": "Sữa", "Molluscs": "Động vật thân mềm", "Mustard": "Mù tạt", "Nuts": "Các loại hạt", "Peanuts": "Đậu phộng", "Sesame seeds": "Hạt vừng", "Soya": "Đậu nành", "Sulphur dioxide": "Lưu huỳnh điôxit" }
+        }
+      };
+
+      // From constants.tsx
+      const LANGUAGES = [ "English", "Spanish", "French", "German", "Italian", "Japanese", "Mandarin Chinese", "Portuguese", "Russian", "Arabic", "Hindi", "Korean", "Thai", "Vietnamese" ];
+
+      // --- END: DATA & HELPERS ---
+
+
+      // --- START: COMPONENTS ---
+      
+      const RestaurantCard = ({ allergens, language }) => {
+        const langData = translations[language] || translations['English'];
+        const baseLangData = translations['English'];
+        const translatedAllergens = allergens.map(allergen => langData.allergens[allergen] || allergen);
+
+        return (
+          <div className="bg-white border-2 border-red-500 rounded-xl shadow-lg overflow-hidden">
+              <div className="p-4 bg-red-600 text-white">
+                  <h3 className="font-bold text-xl flex items-center gap-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                      Urgent: Food Allergy Information
+                  </h3>
+              </div>
+              <div className="p-6 space-y-6">
+                  <div>
+                      <h4 className="font-semibold text-slate-800 text-lg mb-1">To the Chef & Staff (English)</h4>
+                      <p className="text-slate-700 text-base">{baseLangData.instruction}</p>
+                  </div>
+                  {language !== 'English' && (
+                    <div className="border-t border-slate-200 pt-4">
+                        <h4 className="font-semibold text-slate-800 text-lg mb-1">In {language}</h4>
+                        <p className="text-slate-700 text-base font-medium">{langData.instruction}</p>
+                    </div>
+                  )}
+                  <div className="border-t-2 border-red-200 pt-4">
+                      <h4 className="font-bold text-red-700 text-xl mb-3">{langData.allergyTitle}</h4>
+                      <ul className="flex flex-wrap gap-3">
+                        {allergens.length > 0 ? (
+                            translatedAllergens.map((allergen, index) => (
+                                <li key={allergens[index] || index} className="bg-red-100 text-red-800 font-bold px-4 py-2 rounded-lg text-center">{allergen}</li>
+                            ))
+                        ) : <li className="text-slate-500">No allergies selected.</li>}
+                      </ul>
+                  </div>
+              </div>
+          </div>
+        );
+      };
+
+      const EmergencyAlert = ({ userInfo, selectedAllergens, currentLanguage, onClose }) => {
+        const langData = translations[currentLanguage] || translations['English'];
+        const baseLangData = translations['English'];
+        const translatedAllergens = selectedAllergens.map(allergen => langData.allergens[allergen] || allergen);
+
+        return (
+          <div className="fixed inset-0 bg-red-600 text-white flex flex-col items-center justify-center p-4 sm:p-8 z-50 overflow-y-auto">
+            <div className="text-center space-y-6 max-w-4xl w-full">
+              <div className="flex justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-24 w-24 md:h-32 md:w-32 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+              </div>
+              <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">EMERGENCY</h1>
+              <div className="space-y-4">
+                  <p className="text-2xl md:text-4xl font-semibold">{langData.emergencyAlert}</p>
+                  {currentLanguage !== 'English' && (
+                      <p className="text-xl md:text-2xl font-light opacity-90">({baseLangData.emergencyAlert})</p>
+                  )}
+              </div>
+            </div>
+
+            {selectedAllergens && selectedAllergens.length > 0 && (
+              <div className="mt-6 w-full max-w-4xl p-4 bg-black bg-opacity-20 rounded-lg border border-red-400">
+                  <h3 className="font-bold text-xl mb-3 text-red-200 text-center">{langData.allergyTitle}</h3>
+                  <ul className="flex flex-wrap gap-3 justify-center">
+                    {translatedAllergens.map((allergen, index) => (
+                        <li key={selectedAllergens[index] || index} className="bg-white text-red-800 font-bold px-4 py-2 rounded-lg text-center text-base sm:text-lg">{allergen}</li>
+                    ))}
+                  </ul>
+              </div>
+            )}
+            
+            {userInfo.medicalHistory && (
+              <div className="mt-6 w-full max-w-4xl p-4 bg-black bg-opacity-20 rounded-lg border border-red-400">
+                  <h3 className="font-bold text-xl mb-2 text-red-200">User's Medical History</h3>
+                  <p className="text-lg whitespace-pre-wrap">{userInfo.medicalHistory}</p>
+              </div>
+            )}
+
+            <button
+              onClick={onClose}
+              className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 bg-white text-red-600 font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-red-100 transition-colors"
+            >
+              Close Alert
+            </button>
+          </div>
+        );
+      };
+      
+      const RestaurantCardView = ({ selectedAllergens, currentLanguage, onNavigateBack }) => {
+        return (
+          <div className="max-w-4xl mx-auto space-y-8">
+            <header className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div>
+                 <h1 className="text-3xl font-bold text-sky-700">Restaurant Instruction Card</h1>
+                 <p className="mt-1 text-slate-600">Show this card to the restaurant staff.</p>
+              </div>
+              <button 
+                onClick={onNavigateBack}
+                className="px-4 py-2 bg-slate-200 text-slate-800 font-semibold rounded-lg hover:bg-slate-300 transition-colors"
+              >
+                &larr; Back to Settings
+              </button>
+            </header>
+            <RestaurantCard allergens={selectedAllergens} language={currentLanguage} />
+          </div>
+        );
+      };
+
+      const InputField = ({ label, name, value, onChange, isTextArea = false }) => (
+        <div className="flex flex-col">
+          <label htmlFor={name} className="mb-2 font-semibold text-slate-700">{label}</label>
+          {isTextArea ? (
+            <textarea id={name} name={name} value={value} onChange={onChange} rows={3} className="p-3 bg-slate-100 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition" />
+          ) : (
+            <input type="text" id={name} name={name} value={value} onChange={onChange} className="p-3 bg-slate-100 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition" />
+          )}
+        </div>
+      );
+
+      const AllergenCheckbox = ({ allergen, isSelected, onToggle }) => (
+        <div
+          onClick={() => onToggle(allergen)}
+          className={`p-3 border-2 rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-center text-center font-medium
+            ${isSelected ? 'bg-sky-100 border-sky-500 text-sky-800 shadow-md' : 'bg-white border-slate-300 text-slate-700 hover:border-sky-400'}
+          `}
+        >
+          {allergen}
+        </div>
+      );
+      
+      const SetupView = ({
+        userInfo,
+        setUserInfo,
+        allAllergens,
+        selectedAllergens,
+        onAllergenToggle,
+        isSetupComplete,
+        currentLanguage,
+        setCurrentLanguage,
+        onNavigateToRestaurantCard,
+        onNavigateToEmergency
+      }) => {
+
+        const handleInputChange = (e) => {
+          const { name, value } = e.target;
+          setUserInfo({ ...userInfo, [name]: value });
+        };
+
+        const handleDownloadData = () => {
+          const data = { userInfo, selectedAllergens, currentLanguage };
+          const jsonString = JSON.stringify(data, null, 2);
+          const blob = new Blob([jsonString], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'allergen_alert_data.json';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        };
+
+        return (
+          <div className="max-w-4xl mx-auto space-y-8">
+            <header className="text-center">
+              <h1 className="text-4xl font-bold text-sky-700">Allergen Alert Settings</h1>
+              <p className="mt-2 text-lg text-slate-600">Securely store your information and select your allergies.</p>
+            </header>
+
+            <div className="p-8 bg-white rounded-2xl shadow-lg border border-slate-200">
+              <h2 className="text-2xl font-semibold text-slate-800 mb-6 border-b pb-3">1. Personal & Travel Information</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField label="Contact Details (e.g., Phone, Email)" name="contactDetails" value={userInfo.contactDetails} onChange={handleInputChange} isTextArea={true} />
+                <InputField label="Medical History (Brief, for emergencies)" name="medicalHistory" value={userInfo.medicalHistory} onChange={handleInputChange} isTextArea={true} />
+                <InputField label="Passport Number" name="passportNumber" value={userInfo.passportNumber} onChange={handleInputChange} />
+                <InputField label="Hotel Information" name="hotelInfo" value={userInfo.hotelInfo} onChange={handleInputChange} />
+                <InputField label="Travel Insurance Details" name="travelInsurance" value={userInfo.travelInsurance} onChange={handleInputChange} />
+              </div>
+            </div>
+            
+            <div className="p-8 bg-white rounded-2xl shadow-lg border border-slate-200">
+              <h2 className="text-2xl font-semibold text-slate-800 mb-6 border-b pb-3">2. Select Your Allergies</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {allAllergens.map(allergen => (
+                  <AllergenCheckbox key={allergen} allergen={allergen} isSelected={selectedAllergens.includes(allergen)} onToggle={onAllergenToggle} />
+                ))}
+              </div>
+            </div>
+
+            <div className="p-8 bg-white rounded-2xl shadow-lg border border-slate-200">
+              <h2 className="text-2xl font-semibold text-slate-800 mb-6 border-b pb-3">3. Language Settings</h2>
+              <div className="flex flex-col sm:flex-row gap-4 items-center">
+                 <label htmlFor="language-select" className="text-lg font-semibold text-slate-700 whitespace-nowrap">Default Card Language:</label>
+                 <select 
+                    id="language-select"
+                    value={currentLanguage}
+                    onChange={(e) => setCurrentLanguage(e.target.value)}
+                    className="w-full p-3 bg-slate-100 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition"
+                 >
+                    {LANGUAGES.map(lang => (
+                      <option key={lang} value={lang}>{lang}</option>
+                    ))}
+                 </select>
+              </div>
+              <p className="text-sm text-slate-500 mt-3">This language will be used for your restaurant and emergency cards.</p>
+            </div>
+
+            <footer className="flex flex-col sm:flex-row items-center justify-center flex-wrap gap-4 pt-4">
+              <button onClick={handleDownloadData} className="px-6 py-3 bg-slate-600 text-white font-semibold rounded-lg shadow-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-300">
+                Download My Data
+              </button>
+              <button onClick={onNavigateToRestaurantCard} disabled={!isSetupComplete} className="px-6 py-3 bg-sky-600 text-white font-bold rounded-lg shadow-lg hover:bg-sky-700 disabled:bg-slate-300 disabled:cursor-not-allowed disabled:shadow-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-300">
+                View Restaurant Card
+              </button>
+              <button onClick={onNavigateToEmergency} disabled={!isSetupComplete} className="px-6 py-3 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:bg-red-700 disabled:bg-slate-300 disabled:cursor-not-allowed disabled:shadow-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300">
+                View Emergency Alert
+              </button>
+            </footer>
+             {!isSetupComplete && <p className="text-center text-sm text-red-600 mt-2">Please fill in at least one information field and select at least one allergen to proceed.</p>}
+          </div>
+        );
+      };
+
+      const App = () => {
+        const [userInfo, setUserInfo] = useLocalStorage('allergen-app-user-info', {
+          contactDetails: '', medicalHistory: '', passportNumber: '', hotelInfo: '', travelInsurance: '',
+        });
+        const [selectedAllergens, setSelectedAllergens] = useLocalStorage('allergen-app-allergens', []);
+        const [currentLanguage, setCurrentLanguage] = useLocalStorage('allergen-app-language', 'English');
+        const [view, setView] = useState('setup');
+
+        const isSetupComplete = () => {
+          const hasInfo = Object.values(userInfo).some(field => field.trim() !== '');
+          const hasAllergens = selectedAllergens.length > 0;
+          return hasInfo && hasAllergens;
+        };
+
+        const handleAllergenToggle = (allergen) => {
+          setSelectedAllergens(prev =>
+            prev.includes(allergen) ? prev.filter(a => a !== allergen) : [...prev, allergen]
+          );
+        };
+
+        const renderView = () => {
+          switch (view) {
+            case 'setup':
+              return (
+                <SetupView
+                  userInfo={userInfo}
+                  setUserInfo={setUserInfo}
+                  allAllergens={ALLERGENS_LIST}
+                  selectedAllergens={selectedAllergens}
+                  onAllergenToggle={handleAllergenToggle}
+                  isSetupComplete={isSetupComplete()}
+                  currentLanguage={currentLanguage}
+                  setCurrentLanguage={setCurrentLanguage}
+                  onNavigateToRestaurantCard={() => setView('restaurantCard')}
+                  onNavigateToEmergency={() => setView('emergency')}
+                />
+              );
+            case 'restaurantCard':
+              return (
+                <RestaurantCardView
+                  selectedAllergens={selectedAllergens}
+                  currentLanguage={currentLanguage}
+                  onNavigateBack={() => setView('setup')}
+                />
+              );
+            case 'emergency':
+              return <EmergencyAlert userInfo={userInfo} selectedAllergens={selectedAllergens} currentLanguage={currentLanguage} onClose={() => setView('setup')} />;
+            default:
+              return <div>Invalid view</div>;
+          }
+        };
+
+        return (
+          <div className="bg-slate-50 min-h-screen text-slate-800">
+            <main className="container mx-auto p-4 md:p-8">
+              {renderView()}
+            </main>
+          </div>
+        );
+      };
+
+      // --- END: COMPONENTS ---
+
+
+      // --- START: APP MOUNTING ---
+      const rootElement = document.getElementById('root');
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(<App />);
+      // --- END: APP MOUNTING ---
+
+    </script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then(registration => {
+            console.log('SW registered: ', registration);
+          }).catch(registrationError => {
+            console.log('SW registration failed: ', registrationError);
+          });
+        });
+      }
+    </script>
+</body>
+</html>
