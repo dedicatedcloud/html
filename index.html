@@ -11,58 +11,16 @@
   
 </head>
 <body>
-    <h1>One Time Secret Link</h1>
-  <form id="form">
-    <label>Secret: <input id="input" type="text" /></label>
-    <button type="submit">Submit</button>
-  </form>
-  <p id="log"></p>
 
-  <script>
-    function logSubmit(event) {
-      event.preventDefault();
-      log.textContent = `Processing…`;
-      window.createSecret(`${input.value || ""}`).then(({
-        secretLink
-      }) => {
-        log.textContent = `Success! Your secret link is: ${secretLink}`;
-      });
-    }
-    const form = document.getElementById("form");
-    const input = document.getElementById("input");
-    const log = document.getElementById("log");
-    form.addEventListener("submit", logSubmit);
-  </script>
+  <a href="https://dedicatedcloud.github.io/html/all-mate.html">Allergy</a><hr>
+<a href="https://dedicatedcloud.github.io/html/bookmarklet-generator.html">Bookmarklet Generator</a><hr>
+<a href="https://dedicatedcloud.github.io/html/brickwall.html">Brickwall</a><hr>
+<a href="https://dedicatedcloud.github.io/html/bubbles.html">Bubbles</a><hr>
+<a href="https://dedicatedcloud.github.io/html/index.html"></a><hr>
+<a href="https://dedicatedcloud.github.io/html/qr-code.html"></a><hr>
 
-    
-<div class="container">
-    <h1>Qr Code Generator</h1>
-		<form onsubmit="handleSubmit(event)">
-			<input id="inptxt"
-				type="text"
-				value="https://"
-				autocomplete="off">
-			<br>
-			<button type="submit">
-				Generate QR
-			</button>
-			<br></br>
-		</form>
-		<div class="img-div">
-			<img id="qrimg" />
-		</div>
-	</div>
-
- <script>
-	function handleSubmit(event) {
-		event.preventDefault();
-		let text = document.getElementById("inptxt").value;
-		let qrsrc =
-			`http://api.qrserver.com/v1/create-qr-code/?data=${text}`;
-		let qrimg = document.getElementById("qrimg");
-		qrimg.src = qrsrc;
-	}
-	
- </script>
+<a href="https://dedicatedcloud.github.io/html/select2.html">Select2</a><hr>
+<a href="https://dedicatedcloud.github.io/html/todo.html">TOdo</a><hr>
+   
 </body>
 </html>
