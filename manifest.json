@@ -1,0 +1,23 @@
+{
+  "name": "Allergy Mate",
+  "short_name": "Allergymate",
+  "description": "Show allergies",
+  "start_url": "html/all-mate.html",
+  "display": "minimal-ui",
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
