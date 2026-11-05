@@ -1,26 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.min.css">
-  
-  <title>Via script</title>
-  <script src="https://unpkg.com/scrt-link-core@latest/dist/esbuild/browser.js"></script>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chrome Title Forge</title>
+    <link rel="stylesheet" href="80sforge.css" />
+    <script src="80sforge.js" defer></script>
+  </head>
+  <body>
+    <main class="forge">
+      <div class="poster" data-vhs="on" role="img" aria-label="An 80s chrome movie title reading Neon Tide, with the neon tagline Live from Ocean Drive, over a Miami night: a pink moon rising out of the ocean between palm trees">
+        <div class="scene">
+          <div class="sky"></div>
+          <div class="stars"></div>
+          <div class="moon"></div>
+          <div class="cloud" data-n="1"></div>
+          <div class="cloud" data-n="2"></div>
+          <div class="cloud" data-n="3"></div>
+          <div class="sea"></div>
+          <div class="moonpath"></div>
+          <div class="horizon"></div>
+          <div class="palm" data-n="back-start">
+            <div class="trunk"></div>
+            <div class="crown">
+              <div class="frond" data-n="1"></div>
+              <div class="frond" data-n="2"></div>
+              <div class="frond" data-n="3"></div>
+              <div class="frond" data-n="4"></div>
+              <div class="frond" data-n="5"></div>
+              <div class="frond" data-n="6"></div>
+              <div class="frond" data-n="7"></div>
+              <div class="frond" data-n="8"></div>
+              <div class="frond" data-n="9"></div>
+            </div>
+          </div>
+          <div class="palm" data-n="back-end">
+            <div class="trunk"></div>
+            <div class="crown">
+              <div class="frond" data-n="1"></div>
+              <div class="frond" data-n="2"></div>
+              <div class="frond" data-n="3"></div>
+              <div class="frond" data-n="4"></div>
+              <div class="frond" data-n="5"></div>
+              <div class="frond" data-n="6"></div>
+              <div class="frond" data-n="7"></div>
+              <div class="frond" data-n="8"></div>
+              <div class="frond" data-n="9"></div>
+            </div>
+          </div>
+          <div class="palm" data-n="start">
+            <div class="trunk"></div>
+            <div class="crown">
+              <div class="frond" data-n="1"></div>
+              <div class="frond" data-n="2"></div>
+              <div class="frond" data-n="3"></div>
+              <div class="frond" data-n="4"></div>
+              <div class="frond" data-n="5"></div>
+              <div class="frond" data-n="6"></div>
+              <div class="frond" data-n="7"></div>
+              <div class="frond" data-n="8"></div>
+              <div class="frond" data-n="9"></div>
+            </div>
+          </div>
+          <div class="palm" data-n="end">
+            <div class="trunk"></div>
+            <div class="crown">
+              <div class="frond" data-n="1"></div>
+              <div class="frond" data-n="2"></div>
+              <div class="frond" data-n="3"></div>
+              <div class="frond" data-n="4"></div>
+              <div class="frond" data-n="5"></div>
+              <div class="frond" data-n="6"></div>
+              <div class="frond" data-n="7"></div>
+              <div class="frond" data-n="8"></div>
+              <div class="frond" data-n="9"></div>
+            </div>
+          </div>
+          <div class="shore" data-side="start"></div>
+          <div class="shore" data-side="end"></div>
+          <div class="title">
+            <div class="title-word">
+              <span class="title-depth">Neon Tide</span>
+              <span class="title-edge">Neon Tide</span>
+              <span class="title-face">Neon Tide</span>
+              <span class="sparkle" data-n="1"></span>
+              <span class="sparkle" data-n="2"></span>
+            </div>
+          </div>
+          <p class="tagline">Live from Ocean Drive</p>
+        </div>
+        <div class="vhs">
+          <div class="scanlines"></div>
+          <div class="tracking"></div>
+          <p class="osd" data-corner="start">PLAY &#9654;</p>
+          <p class="osd" data-corner="end">SP <span class="counter">0:00:00</span></p>
+        </div>
+      </div>
 
-  
-</head>
-<body>
-
-  <a href="https://dedicatedcloud.github.io/html/all-mate.html">Allergy</a><hr>
-<a href="https://dedicatedcloud.github.io/html/bookmarklet-generator.html">Bookmarklet Generator</a><hr>
-<a href="https://dedicatedcloud.github.io/html/brickwall.html">Brickwall</a><hr>
-<a href="https://dedicatedcloud.github.io/html/bubbles.html">Bubbles</a><hr>
-<a href="https://dedicatedcloud.github.io/html/index.html"></a><hr>
-<a href="https://dedicatedcloud.github.io/html/qr-code.html"></a><hr>
-
-<a href="https://dedicatedcloud.github.io/html/select2.html">Select2</a><hr>
-<a href="https://dedicatedcloud.github.io/html/todo.html">TOdo</a><hr>
-   
-</body>
+      <form class="controls">
+        <label class="field">
+          <span>Title</span>
+          <input name="title" value="Neon Tide" maxlength="16" autocomplete="off" spellcheck="false" />
+        </label>
+        <label class="field">
+          <span>Tagline</span>
+          <input name="tagline" value="Live from Ocean Drive" maxlength="28" autocomplete="off" spellcheck="false" />
+        </label>
+        <label class="toggle">
+          <input type="checkbox" name="vhs" checked />
+          <span>VHS</span>
+        </label>
+        <button class="save" type="button">Save as image</button>
+        <p class="save-status" role="status"></p>
+      </form>
+    </main>
+  </body>
 </html>

@@ -1,0 +1,1027 @@
+@layer reset, tokens, base, layout, components, utilities, overrides;
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  :where(input, button) {
+    font: inherit;
+  }
+}
+
+@layer tokens {
+  @font-face {
+    font-family: "Kanit";
+    font-style: italic;
+    font-weight: 900;
+    font-display: swap;
+    src: url("fonts/kanit-latin-900-italic.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Mr Dafoe";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("fonts/mr-dafoe-latin-400-normal.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "VT323";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("fonts/vt323-latin-400-normal.woff2") format("woff2");
+  }
+
+  :root {
+    color-scheme: dark;
+
+    --color-sky-top: oklch(13% 0.05 275);
+    --color-sky-high: oklch(19% 0.08 285);
+    --color-sky-mid: oklch(30% 0.13 305);
+    --color-sky-low: oklch(48% 0.18 340);
+    --color-sky-horizon: oklch(70% 0.16 15);
+    --color-star: oklch(97% 0.02 280);
+
+    --color-moon-core: oklch(97% 0.03 60);
+    --color-moon-mid: oklch(88% 0.08 15);
+    --color-moon-edge: oklch(76% 0.14 355);
+    --color-moon-crater: oklch(72% 0.1 350 / 0.35);
+    --color-moon-glow: oklch(72% 0.2 350 / 0.55);
+    --color-moon-haze: oklch(60% 0.2 340 / 0.32);
+    --color-moonlight: oklch(94% 0.06 20 / 0.85);
+    --color-moonlight-dim: oklch(85% 0.1 355 / 0.55);
+    --color-horizon: oklch(90% 0.08 10);
+
+    --color-cloud: oklch(36% 0.13 315 / 0.75);
+    --color-cloud-rim: oklch(72% 0.17 355 / 0.85);
+
+    --color-sea-glow: oklch(52% 0.16 345);
+    --color-sea-high: oklch(32% 0.12 320);
+    --color-sea-mid: oklch(24% 0.08 260);
+    --color-sea-deep: oklch(13% 0.05 245);
+    --color-sea-glint: oklch(80% 0.12 345 / 0.3);
+    --color-sea-teal: oklch(70% 0.11 195 / 0.28);
+
+    --color-palm: oklch(10% 0.035 300);
+    --color-palm-back: oklch(19% 0.07 305);
+    --color-palm-rim: oklch(34% 0.14 345);
+    --color-palm-glow: oklch(55% 0.2 345 / 0.5);
+
+    --color-chrome-1: oklch(99% 0.01 230);
+    --color-chrome-2: oklch(84% 0.07 225);
+    --color-chrome-3: oklch(60% 0.12 245);
+    --color-chrome-4: oklch(97% 0.02 230);
+    --color-chrome-horizon: oklch(20% 0.05 295);
+    --color-chrome-5: oklch(36% 0.13 318);
+    --color-chrome-6: oklch(70% 0.18 355);
+    --color-chrome-7: oklch(93% 0.07 60);
+    --color-chrome-edge: oklch(95% 0.03 320);
+    --color-chrome-line: oklch(16% 0.04 290);
+    --color-depth: oklch(16% 0.06 290);
+    --color-depth-2: oklch(26% 0.1 300);
+    --color-depth-3: oklch(34% 0.13 320);
+    --color-title-glow: oklch(66% 0.24 350 / 0.55);
+    --color-glint: oklch(100% 0 0 / 0.9);
+    --color-sparkle: oklch(100% 0 0);
+    --color-sparkle-glow: oklch(90% 0.08 230 / 0.8);
+
+    --color-neon-core: oklch(97% 0.04 350);
+    --color-neon: oklch(70% 0.25 355);
+    --color-neon-deep: oklch(55% 0.26 345 / 0.8);
+    --color-neon-shadow: oklch(10% 0.04 300 / 0.75);
+
+    --color-scanline: oklch(0% 0 0 / 0.22);
+    --color-vignette: oklch(0% 0 0 / 0.55);
+    --color-bleed-red: oklch(62% 0.25 25 / 0.45);
+    --color-bleed-cyan: oklch(80% 0.14 200 / 0.4);
+    --color-tracking: oklch(100% 0 0 / 0.05);
+    --color-osd: oklch(97% 0.01 250);
+    --color-osd-shadow: oklch(10% 0.02 260 / 0.8);
+
+    --color-page: oklch(11% 0.03 285);
+    --color-page-glow: oklch(19% 0.07 320);
+    --color-tape: oklch(4% 0 0);
+    --color-panel: oklch(17% 0.04 290);
+    --color-ui-ink: oklch(96% 0.02 300);
+    --color-ui-muted: oklch(78% 0.04 300);
+    --color-ui-line: oklch(42% 0.08 300);
+    --color-teal: oklch(82% 0.12 195);
+    --color-pink: oklch(70% 0.22 355);
+    --color-pink-deep: oklch(47% 0.2 355);
+    --color-pink-halo: oklch(70% 0.22 355 / 0.45);
+    --color-focus: var(--color-teal);
+
+    --font-chrome: "Kanit", "Arial Black", Impact, sans-serif;
+    --font-neon: "Mr Dafoe", "Brush Script MT", "Z003", cursive;
+    --font-osd: "VT323", "Courier New", ui-monospace, monospace;
+    --font-ui: system-ui, sans-serif;
+
+    --space-2xs: 0.35rem;
+    --space-s: 0.75rem;
+    --space-m: 1rem;
+    --space-l: 1.5rem;
+    --text-xs: 0.75rem;
+    --text-s: 0.875rem;
+    --text-m: 1rem;
+    --leading-body: 1.5;
+    --leading-tight: 1;
+    --radius-s: 0.4rem;
+    --radius-pill: 999px;
+    --size-target: 2.75rem;
+    --size-check: 1.25rem;
+    --focus-width: 3px;
+    --border-width: 2px;
+    --halo-size: 1rem;
+
+    --duration-glint: 7s;
+    --duration-tracking: 9s;
+    --duration-sway-a: 7s;
+    --duration-sway-b: 9s;
+    --duration-shimmer: 2.4s;
+    --duration-twinkle: 4s;
+    --duration-fast: 0.15s;
+
+    --scene-grid: 1600;
+    --poster-size: min(100dvi - 2rem, (100dvb - 12rem) * 16 / 9, 75rem);
+  }
+}
+
+@layer base {
+  body {
+    min-block-size: 100dvh;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(ellipse at 50% 30%, var(--color-page-glow), var(--color-page) 70%);
+    color: var(--color-ui-ink);
+    font: var(--text-m) / var(--leading-body) var(--font-ui);
+  }
+}
+
+@layer layout {
+  .forge {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-l);
+    padding: var(--space-m);
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: center;
+    gap: var(--space-m);
+    inline-size: var(--poster-size);
+    max-inline-size: 100%;
+  }
+}
+
+@layer components {
+  .poster {
+    --u: calc(100cqi / var(--scene-grid));
+
+    position: relative;
+    container-type: inline-size;
+    inline-size: var(--poster-size);
+    aspect-ratio: 16 / 9;
+    overflow: clip;
+    background: var(--color-tape);
+    forced-color-adjust: none;
+
+    &[data-vhs="on"] {
+      --bleed: drop-shadow(calc(2.5 * var(--u)) 0 0 var(--color-bleed-red)) drop-shadow(calc(-2.5 * var(--u)) 0 0 var(--color-bleed-cyan));
+    }
+  }
+
+  .scene,
+  .vhs {
+    position: absolute;
+    inset: 0;
+  }
+
+  :where(.scene, .vhs, .palm) > * {
+    position: absolute;
+    inset-inline-start: calc(var(--x) * var(--u));
+    inset-block-start: calc(var(--y) * var(--u));
+    inline-size: calc(var(--w) * var(--u));
+    block-size: calc(var(--h) * var(--u));
+    margin: 0;
+  }
+
+  .sky {
+    --x: 0;
+    --y: 0;
+    --w: 1600;
+    --h: 612;
+
+    background:
+      radial-gradient(ellipse 50% 40% at 50% 100%, var(--color-moon-haze), transparent),
+      linear-gradient(var(--color-sky-top), var(--color-sky-high) 28%, var(--color-sky-mid) 58%, var(--color-sky-low) 84%, var(--color-sky-horizon));
+  }
+
+  .stars {
+    --x: 0;
+    --y: 0;
+    --w: 1600;
+    --h: 540;
+
+    background-image:
+      radial-gradient(circle, var(--color-star) 0 calc(0.9 * var(--u)), transparent calc(1.3 * var(--u))),
+      radial-gradient(circle, var(--color-star) 0 calc(1.3 * var(--u)), transparent calc(1.8 * var(--u))),
+      radial-gradient(circle, var(--color-star) 0 calc(1.8 * var(--u)), transparent calc(2.6 * var(--u))),
+      radial-gradient(circle, var(--color-star) 0 calc(0.7 * var(--u)), transparent calc(1.1 * var(--u)));
+    background-size:
+      calc(97 * var(--u)) calc(89 * var(--u)),
+      calc(151 * var(--u)) calc(131 * var(--u)),
+      calc(263 * var(--u)) calc(197 * var(--u)),
+      calc(59 * var(--u)) calc(71 * var(--u));
+    background-position:
+      calc(13 * var(--u)) calc(7 * var(--u)),
+      calc(61 * var(--u)) calc(43 * var(--u)),
+      calc(120 * var(--u)) calc(90 * var(--u)),
+      calc(30 * var(--u)) calc(20 * var(--u));
+    mask-image: linear-gradient(black 25%, transparent 92%);
+    animation: twinkle var(--duration-twinkle) ease-in-out infinite alternate;
+  }
+
+  .moon {
+    --x: 640;
+    --y: 420;
+    --w: 320;
+    --h: 320;
+
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 63% 30%, var(--color-moon-crater), transparent 9%),
+      radial-gradient(circle at 36% 56%, var(--color-moon-crater), transparent 12%),
+      radial-gradient(circle at 70% 60%, var(--color-moon-crater), transparent 7%),
+      radial-gradient(circle at 46% 24%, var(--color-moon-crater), transparent 5%),
+      radial-gradient(circle at 50% 38%, var(--color-moon-core) 0 30%, var(--color-moon-mid) 62%, var(--color-moon-edge));
+    box-shadow:
+      0 0 calc(50 * var(--u)) var(--color-moon-glow),
+      0 0 calc(150 * var(--u)) var(--color-moon-haze);
+  }
+
+  .cloud {
+    background: linear-gradient(var(--color-cloud-rim), var(--color-cloud) 45%);
+    mask-image: radial-gradient(closest-side, black 40%, transparent);
+
+    &[data-n="1"] {
+      --x: 360;
+      --y: 470;
+      --w: 880;
+      --h: 26;
+    }
+
+    &[data-n="2"] {
+      --x: 600;
+      --y: 518;
+      --w: 640;
+      --h: 18;
+    }
+
+    &[data-n="3"] {
+      --x: 250;
+      --y: 552;
+      --w: 540;
+      --h: 14;
+    }
+  }
+
+  .sea {
+    --x: 0;
+    --y: 610;
+    --w: 1600;
+    --h: 290;
+
+    background:
+      radial-gradient(ellipse 30% 26% at 50% 0, var(--color-sea-glow), transparent),
+      linear-gradient(var(--color-sea-high), var(--color-sea-mid) 35%, var(--color-sea-deep));
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+      linear-gradient(var(--color-sea-teal) 0 0) 25.89% 0.06% / 2.31% 0.36% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 14.11% 0.06% / 2.81% 0.36% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 22.64% 0.06% / 1.8% 0.36% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 76.63% 0.06% / 3.71% 0.36% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 2.74% 0.46% / 3.64% 0.39% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 11.72% 0.46% / 2.9% 0.39% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 88.1% 0.46% / 2.39% 0.39% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 22.04% 0.46% / 3.21% 0.39% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 38.51% 1.15% / 3.78% 0.41% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 2.68% 1.15% / 3.99% 0.41% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 94.53% 1.15% / 3.52% 0.41% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 85.85% 2.1% / 2.69% 0.44% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 27.86% 2.1% / 3.15% 0.44% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 31.42% 2.1% / 3.68% 0.44% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 72.52% 3.3% / 3.69% 0.47% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 78.8% 3.3% / 3.54% 0.47% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 32.22% 3.3% / 2.73% 0.47% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 8% 3.3% / 4.36% 0.47% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 12.49% 4.74% / 3.32% 0.5% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 25.93% 4.74% / 2.83% 0.5% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 63.13% 4.74% / 2.45% 0.5% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 9.93% 6.41% / 5.92% 0.52% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 18.78% 6.41% / 4.91% 0.52% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 29.55% 6.41% / 6.17% 0.52% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 39.06% 6.41% / 5.02% 0.52% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 17.16% 6.41% / 4.52% 0.52% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 4.6% 8.29% / 5.05% 0.55% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 23.58% 10.39% / 2.55% 0.58% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 4.31% 10.39% / 3.22% 0.58% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 12.14% 12.7% / 5.05% 0.61% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 21.28% 15.21% / 4.64% 0.63% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 61% 15.21% / 3.41% 0.63% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 30.43% 15.21% / 4.85% 0.63% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 92.85% 17.92% / 7.38% 0.66% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 8.22% 20.83% / 3.74% 0.69% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 82.79% 20.83% / 4.81% 0.69% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 2.7% 20.83% / 3.43% 0.69% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 64.95% 23.93% / 8.27% 0.72% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 20.8% 23.93% / 3.8% 0.72% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 90.92% 23.93% / 5.94% 0.72% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 68.51% 27.22% / 7.72% 0.74% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 87.8% 27.22% / 6.54% 0.74% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 12.53% 27.22% / 5.68% 0.74% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 91.48% 27.22% / 5.68% 0.74% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 0.69% 30.7% / 2.98% 0.77% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 29.83% 30.7% / 5.45% 0.77% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 71.56% 30.7% / 6.84% 0.77% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 32.87% 34.37% / 5.9% 0.8% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 2.48% 34.37% / 8.86% 0.8% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 80.37% 34.37% / 7.81% 0.8% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 75.7% 34.37% / 2.57% 0.8% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 19.09% 38.22% / 4.91% 0.83% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 93.77% 38.22% / 10.21% 0.83% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 17.99% 42.25% / 9.37% 0.86% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 82.71% 42.25% / 9.73% 0.86% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 33.29% 46.46% / 8.17% 0.88% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 26.06% 46.46% / 12.44% 0.88% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 93.48% 46.46% / 6.09% 0.88% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 76.97% 46.46% / 4.98% 0.88% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 16.03% 50.85% / 5.42% 0.91% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 18.48% 50.85% / 2.94% 0.91% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 74.16% 55.42% / 5.18% 0.94% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 90.83% 55.42% / 12.41% 0.94% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 18.56% 55.42% / 9.42% 0.94% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 88.76% 55.42% / 12.65% 0.94% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 90.4% 65.08% / 3.18% 0.99% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 3.16% 65.08% / 5.54% 0.99% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 27.93% 70.17% / 7.9% 1.02% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 10.22% 70.17% / 6.14% 1.02% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 8.16% 70.17% / 7.08% 1.02% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 8.72% 70.17% / 7.71% 1.02% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 68.88% 75.43% / 4.42% 1.05% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 74.67% 75.43% / 10.4% 1.05% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 15.59% 75.43% / 1.47% 1.05% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 30.92% 80.86% / 11.83% 1.08% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 85.75% 80.86% / 3.89% 1.08% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 33.22% 86.46% / 4.77% 1.1% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 31.18% 86.46% / 10.41% 1.1% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 84.8% 86.46% / 13.42% 1.1% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 74.97% 92.22% / 7.63% 1.13% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 4.4% 92.22% / 14.64% 1.13% no-repeat,
+      linear-gradient(var(--color-sea-teal) 0 0) 93.03% 98.16% / 11.07% 1.16% no-repeat,
+      linear-gradient(var(--color-sea-glint) 0 0) 83.99% 98.16% / 5.64% 1.16% no-repeat;
+      animation: glitter var(--duration-twinkle) ease-in-out infinite alternate;
+    }
+  }
+
+  .moonpath {
+    --x: 640;
+    --y: 612;
+    --w: 320;
+    --h: 288;
+
+    background:
+      linear-gradient(var(--color-moonlight) 0 0) 44.69% 0.08% / 4.35% 0.47% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 52.91% 0.08% / 7.51% 0.47% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 42.91% 0.5% / 4.28% 0.5% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 51.51% 0.5% / 9.56% 0.5% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 46.7% 1.19% / 11.36% 0.53% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 57.57% 1.19% / 6.14% 0.53% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 44.81% 2.11% / 6.17% 0.57% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 52.93% 2.11% / 6.14% 0.57% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 60.25% 2.11% / 4.32% 0.57% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 46.9% 3.23% / 11.47% 0.6% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 59.09% 3.23% / 8.49% 0.6% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 46.05% 4.55% / 10.18% 0.63% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 60.67% 4.55% / 11.24% 0.63% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 45.26% 6.04% / 14.03% 0.66% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 59.63% 6.04% / 8.49% 0.66% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 43.13% 7.71% / 11.37% 0.7% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 55.84% 7.71% / 6.15% 0.7% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 61.99% 7.71% / 1.6% 0.7% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 46.3% 9.54% / 18.64% 0.73% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 63.55% 9.54% / 8.64% 0.73% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 44.37% 11.53% / 16.64% 0.76% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 63.43% 11.53% / 12.25% 0.76% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 38.88% 13.68% / 15.14% 0.79% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 62.17% 13.68% / 17.72% 0.79% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 44.42% 15.97% / 22.86% 0.83% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 67.32% 15.97% / 9.98% 0.83% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 38.75% 18.41% / 13.32% 0.86% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 61.88% 18.41% / 17.12% 0.86% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 42.91% 20.99% / 20.17% 0.89% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 66.29% 20.99% / 15.02% 0.89% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 39.77% 23.71% / 24.9% 0.93% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 63.95% 23.71% / 12.81% 0.93% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 29.7% 26.56% / 15.77% 0.96% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 58.83% 26.56% / 24.93% 0.96% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 31.86% 29.55% / 10.3% 0.99% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 55.31% 29.55% / 27.24% 0.99% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 32.77% 32.67% / 15.27% 1.02% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 58.66% 32.67% / 20.7% 1.02% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 72.38% 32.67% / 3.6% 1.02% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 32.52% 35.92% / 13.41% 1.06% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 55.09% 35.92% / 18.04% 1.06% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 73.87% 35.92% / 8.19% 1.06% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 37.19% 39.29% / 32.23% 1.09% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 67.76% 39.29% / 12.72% 1.09% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 79.65% 39.29% / 4.99% 1.09% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 36.81% 42.79% / 26.82% 1.12% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 75.24% 42.79% / 26.33% 1.12% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 28.94% 46.42% / 15.21% 1.15% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 52.66% 46.42% / 15.55% 1.15% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 76.44% 46.42% / 15.87% 1.15% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 20.81% 50.16% / 17.68% 1.19% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 45.89% 50.16% / 17.25% 1.19% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 72.69% 50.16% / 18.95% 1.19% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 28.76% 54.03% / 22.53% 1.22% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 57.71% 54.03% / 16.5% 1.22% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 78.92% 54.03% / 10.14% 1.22% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 26.45% 58.01% / 13.21% 1.25% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 51.49% 58.01% / 19.49% 1.25% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 72.97% 58.01% / 13.2% 1.25% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 22.77% 62.12% / 19.3% 1.28% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 49.98% 62.12% / 21.63% 1.28% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 81.88% 62.12% / 20.06% 1.28% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 30.63% 66.34% / 36.07% 1.32% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 68.64% 66.34% / 17.38% 1.32% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 14.84% 70.67% / 22.74% 1.35% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 51.78% 70.67% / 29.35% 1.35% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 78.41% 70.67% / 7.53% 1.35% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 17.28% 75.12% / 23.96% 1.38% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 60.01% 75.12% / 27.69% 1.38% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 86.68% 75.12% / 15.31% 1.38% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 23% 79.68% / 16.95% 1.42% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 63.44% 79.68% / 39.26% 1.42% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 90.55% 79.68% / 8.5% 1.42% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 21.97% 84.36% / 40.32% 1.45% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 79.15% 84.36% / 24.61% 1.45% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 23.22% 89.14% / 39.96% 1.48% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 78.1% 89.14% / 23.1% 1.48% no-repeat,
+      linear-gradient(var(--color-moonlight-dim) 0 0) 93% 89.14% / 3.18% 1.48% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 22.36% 94.04% / 29.03% 1.51% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 68.7% 94.04% / 33.2% 1.51% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 16% 99.04% / 35.48% 1.55% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 62.89% 99.04% / 25.62% 1.55% no-repeat,
+      linear-gradient(var(--color-moonlight) 0 0) 88.6% 99.04% / 13.96% 1.55% no-repeat;
+    mask-image: radial-gradient(ellipse 55% 110% at 50% 0, black 35%, transparent);
+    animation: shimmer var(--duration-shimmer) ease-in-out infinite alternate;
+  }
+
+  .horizon {
+    --x: 0;
+    --y: 606;
+    --w: 1600;
+    --h: 8;
+
+    background: linear-gradient(90deg, transparent 10%, var(--color-sky-horizon) 30%, var(--color-horizon) 50%, var(--color-sky-horizon) 70%, transparent 90%);
+    mask-image: linear-gradient(transparent, black 50%, transparent);
+  }
+
+  .palm {
+    --w: 900;
+    --h: 900;
+    --palm: var(--color-palm);
+
+    transform-origin: 50% 100%;
+    scale: calc(var(--flip, 1) * var(--s, 1)) var(--s, 1);
+    filter: drop-shadow(0 0 calc(4 * var(--u)) var(--color-palm-glow)) var(--bleed,);
+
+    &[data-n="start"] {
+      --x: -170;
+      --y: -6;
+      --s: 0.88;
+    }
+
+    &[data-n="end"] {
+      --x: 870;
+      --y: -20;
+      --s: 0.94;
+      --flip: -1;
+      --sway-duration: var(--duration-sway-b);
+    }
+
+    &[data-n="back-start"] {
+      --x: 60;
+      --y: -44;
+      --s: 0.56;
+      --palm: var(--color-palm-back);
+      --sway-duration: var(--duration-sway-b);
+    }
+
+    &[data-n="back-end"] {
+      --x: 760;
+      --y: -52;
+      --s: 0.6;
+      --flip: -1;
+      --palm: var(--color-palm-back);
+    }
+  }
+
+  .trunk {
+    --x: 150;
+    --y: 150;
+    --w: 300;
+    --h: 750;
+
+    background: linear-gradient(90deg, var(--palm) 45%, var(--color-palm-rim));
+    clip-path: polygon(32.2% 99.92%, 31.18% 98.16%, 31.06% 96.4%, 30.97% 94.65%, 31.77% 92.91%, 30.87% 91.17%, 30.86% 89.44%, 30.88% 87.72%, 31.8% 86.02%, 31.01% 84.3%, 31.12% 82.6%, 31.26% 80.91%, 32.3% 79.25%, 31.63% 77.56%, 31.85% 75.89%, 32.11% 74.23%, 33.25% 72.61%, 32.7% 70.93%, 33.04% 69.3%, 33.41% 67.67%, 34.67% 66.09%, 34.24% 64.43%, 34.7% 62.82%, 35.18% 61.23%, 36.56% 59.69%, 36.24% 58.05%, 36.82% 56.47%, 37.42% 54.91%, 38.9% 53.41%, 38.71% 51.79%, 39.4% 50.24%, 40.12% 48.71%, 41.71% 47.25%, 41.64% 45.65%, 42.45% 44.13%, 43.28% 42.63%, 44.98% 41.21%, 45.04% 39.63%, 45.96% 38.14%, 46.91% 36.67%, 48.72% 35.29%, 48.9% 33.73%, 49.94% 32.27%, 51% 30.82%, 52.92% 29.49%, 53.22% 27.95%, 54.38% 26.52%, 55.56% 25.1%, 57.59% 23.81%, 58.02% 22.29%, 59.29% 20.89%, 60.59% 19.5%, 62.72% 18.25%, 63.28% 16.74%, 64.67% 15.37%, 66.09% 14.01%, 68.32% 12.8%, 69.01% 11.32%, 70.52% 9.98%, 72.05% 8.65%, 74.39% 7.48%, 75.21% 6.01%, 76.84% 4.7%, 78.49% 3.4%, 80.93% 2.27%, 72.4% 0.4%, 71.33% 1.86%, 69.53% 3.17%, 67.76% 4.48%, 65.24% 5.65%, 64.3% 7.13%, 62.62% 8.47%, 60.97% 9.82%, 58.55% 11.03%, 57.74% 12.54%, 56.18% 13.91%, 54.64% 15.29%, 52.33% 16.54%, 51.65% 18.07%, 50.2% 19.48%, 48.78% 20.89%, 46.58% 22.19%, 46.03% 23.74%, 44.7% 25.18%, 43.39% 26.62%, 41.3% 27.97%, 40.88% 29.54%, 39.66% 31.01%, 38.48% 32.49%, 36.49% 33.88%, 36.19% 35.47%, 35.1% 36.97%, 34.03% 38.48%, 32.15% 39.92%, 31.98% 41.53%, 31% 43.06%, 30.06% 44.61%, 28.29% 46.09%, 28.25% 47.72%, 27.38% 49.29%, 26.55% 50.86%, 24.9% 52.39%, 24.98% 54.04%, 24.24% 55.64%, 23.53% 57.25%, 21.98% 58.81%, 22.19% 60.49%, 21.56% 62.12%, 20.97% 63.76%, 19.55% 65.37%, 19.87% 67.07%, 19.37% 68.74%, 18.89% 70.41%, 17.58% 72.06%, 18.03% 73.78%, 17.64% 75.48%, 17.28% 77.18%, 16.09% 78.87%, 16.66% 80.61%, 16.39% 82.34%, 16.15% 84.08%, 15.07% 85.82%, 15.76% 87.58%, 15.61% 89.34%, 15.49% 91.11%, 14.53% 92.89%, 15.34% 94.67%, 15.31% 96.46%, 15.31% 98.27%, 14.47% 100.08%);
+  }
+
+  .crown {
+    --x: 0;
+    --y: -10;
+    --w: 760;
+    --h: 520;
+
+    background: radial-gradient(circle calc(30 * var(--u)) at 50% 32.7%, var(--palm) 85%, transparent);
+    transform-origin: 50% 32.7%;
+    animation: sway var(--sway-duration, var(--duration-sway-a)) ease-in-out infinite alternate;
+  }
+
+  .frond {
+    position: absolute;
+    inset: 0;
+    background: var(--palm);
+
+    &[data-n="1"] {
+      clip-path: polygon(50% 32.69%, 40.26% 27.62%, 46.95% 25.46%, 39.21% 27.48%, 38.47% 27.45%, 46.53% 23.52%, 37.42% 27.42%, 36.69% 27.46%, 44.73% 22.14%, 35.63% 27.54%, 34.9% 27.66%, 42.85% 20.77%, 33.85% 27.85%, 33.12% 28.04%, 40.82% 19.42%, 32.07% 28.34%, 31.34% 28.61%, 38.1% 18.9%, 30.29% 29.02%, 29.57% 29.36%, 36.35% 16.6%, 28.52% 29.88%, 27.8% 30.3%, 33.78% 15.2%, 26.75% 30.93%, 26.03% 31.42%, 30.38% 16.01%, 24.98% 32.16%, 24.27% 32.72%, 26.95% 17.95%, 23.21% 33.57%, 22.5% 34.2%, 23.9% 18.44%, 21.45% 35.16%, 20.75% 35.86%, 20.8% 19.88%, 19.69% 36.93%, 18.99% 37.71%, 17.87% 22.83%, 17.94% 38.89%, 17.23% 39.74%, 15.32% 26.91%, 16.18% 41.02%, 15.48% 41.94%, 12.86% 30.06%, 14.43% 43.34%, 13.73% 44.33%, 11.22% 35.59%, 12.68% 45.84%, 11.98% 46.9%, 8.83% 38.01%, 10.93% 48.52%, 10.23% 49.65%, 7.15% 42.29%, 9.18% 51.38%, 8.49% 52.58%, 5.78% 46.96%, 7.43% 54.42%, 6.74% 55.7%, 5.1% 52.65%, 5.69% 57.64%, 5.51% 58.29%, 5.89% 57.88%, 9.15% 58.09%, 6.95% 55.94%, 7.66% 54.7%, 12.56% 56.81%, 8.71% 52.86%, 9.42% 51.7%, 15.23% 55.09%, 10.48% 49.97%, 11.19% 48.88%, 17.66% 53.39%, 12.24% 47.27%, 12.95% 46.25%, 19.02% 50.72%, 14% 44.75%, 14.71% 43.81%, 22.23% 50.54%, 15.77% 42.41%, 16.47% 41.54%, 24.15% 49.08%, 17.53% 40.26%, 18.23% 39.47%, 26.61% 48.68%, 19.28% 38.29%, 19.99% 37.57%, 28.62% 47.96%, 21.04% 36.51%, 21.74% 35.86%, 30.05% 46.64%, 22.79% 34.9%, 23.49% 34.33%, 31.23% 45.1%, 24.54% 33.49%, 25.24% 32.99%, 33.24% 45.31%, 26.29% 32.25%, 26.98% 31.83%, 34.92% 45.26%, 28.04% 31.2%, 28.73% 30.85%, 35.78% 43.68%, 29.78% 30.33%, 30.46% 30.06%, 36.31% 41.33%, 31.52% 29.65%, 32.2% 29.44%, 37.79% 41.37%, 33.25% 29.14%, 33.93% 29.01%, 38.95% 40.68%, 34.98% 28.82%, 35.66% 28.75%, 40.15% 40.21%, 36.71% 28.67%, 37.38% 28.68%, 41.41% 39.96%, 38.44% 28.71%, 39.11% 28.78%, 42.3% 38.05%, 40.16% 28.92%);
+    }
+
+    &[data-n="2"] {
+      clip-path: polygon(50% 32.69%, 42.65% 22.18%, 49.21% 25.04%, 41.83% 21.37%, 41.25% 20.86%, 48.29% 23.39%, 40.43% 20.13%, 39.86% 19.68%, 48.75% 22.07%, 39.04% 19.04%, 38.47% 18.65%, 47.05% 20.29%, 37.65% 18.1%, 37.07% 17.77%, 46.77% 18.71%, 36.25% 17.3%, 35.68% 17.03%, 45.1% 17.07%, 34.86% 16.64%, 34.29% 16.43%, 42.95% 15.61%, 33.47% 16.14%, 32.9% 15.98%, 42.27% 13.99%, 32.08% 15.77%, 31.51% 15.68%, 40.88% 12.48%, 30.69% 15.55%, 30.12% 15.52%, 39.2% 11.11%, 29.3% 15.48%, 28.73% 15.5%, 37.83% 9.55%, 27.91% 15.55%, 27.35% 15.64%, 35.64% 8.58%, 26.53% 15.77%, 25.97% 15.91%, 32.8% 8.48%, 25.15% 16.13%, 24.59% 16.33%, 30.21% 8.51%, 23.77% 16.63%, 23.21% 16.89%, 28.12% 8.03%, 22.39% 17.28%, 21.84% 17.6%, 25.58% 8.64%, 21.02% 18.07%, 20.47% 18.44%, 23.12% 9.63%, 19.65% 19%, 19.1% 19.43%, 20.34% 13.31%, 18.28% 20.08%, 17.74% 20.56%, 18.3% 15.45%, 16.92% 21.29%, 16.37% 21.84%, 16.47% 18.1%, 15.55% 22.65%, 15.41% 23.04%, 15.7% 22.97%, 18.28% 24.82%, 16.52% 22.16%, 17.07% 21.67%, 20.24% 24.76%, 17.89% 20.94%, 18.43% 20.5%, 22.03% 24.72%, 19.25% 19.86%, 19.8% 19.49%, 24.6% 26.51%, 20.62% 18.93%, 21.16% 18.61%, 26.07% 26.63%, 21.98% 18.14%, 22.52% 17.88%, 27.51% 26.97%, 23.34% 17.49%, 23.87% 17.29%, 28.56% 26.65%, 24.69% 16.99%, 25.22% 16.84%, 29.96% 27.48%, 26.04% 16.62%, 26.57% 16.54%, 31.42% 28.92%, 27.39% 16.4%, 27.92% 16.37%, 32.52% 29.58%, 28.74% 16.33%, 29.27% 16.35%, 33.32% 29.3%, 30.08% 16.39%, 30.61% 16.46%, 34.28% 29.77%, 31.43% 16.59%, 31.95% 16.72%, 35.19% 30.03%, 32.77% 16.93%, 33.29% 17.11%, 36% 29.51%, 34.11% 17.41%, 34.63% 17.65%, 37.12% 31.29%, 35.45% 18.03%, 35.96% 18.33%, 38.15% 32.56%, 36.78% 18.79%, 37.3% 19.14%, 39.06% 31.97%, 38.12% 19.7%, 38.64% 20.1%, 40.13% 33.6%, 39.46% 20.74%, 39.98% 21.2%, 41.16% 32.19%, 40.8% 21.92%, 41.31% 22.44%, 42.29% 32.95%, 42.13% 23.25%);
+    }
+
+    &[data-n="3"] {
+      clip-path: polygon(50% 32.69%, 47% 21.24%, 50.9% 25.95%, 46.63% 20.21%, 46.37% 19.54%, 50.79% 24.6%, 46% 18.57%, 45.74% 17.94%, 50.32% 22.95%, 45.37% 17.02%, 45.11% 16.42%, 51.01% 22.42%, 44.74% 15.56%, 44.48% 15%, 50.9% 21.16%, 44.11% 14.19%, 43.85% 13.67%, 50.68% 19.84%, 43.48% 12.92%, 43.21% 12.44%, 50.18% 18.33%, 42.85% 11.74%, 42.58% 11.29%, 49.8% 16.95%, 42.22% 10.65%, 41.95% 10.24%, 48.34% 14.89%, 41.58% 9.66%, 41.32% 9.29%, 48.22% 13.79%, 40.95% 8.76%, 40.69% 8.42%, 47.51% 12.36%, 40.32% 7.95%, 40.05% 7.65%, 47.45% 11.28%, 39.69% 7.23%, 39.42% 6.97%, 46.11% 9.69%, 39.05% 6.61%, 38.78% 6.39%, 44.57% 8.2%, 38.42% 6.08%, 38.15% 5.9%, 44.29% 7.12%, 37.79% 5.65%, 37.52% 5.51%, 42.34% 5.92%, 37.15% 5.31%, 36.89% 5.22%, 42.04% 4.91%, 36.52% 5.07%, 36.26% 5.01%, 40.47% 4.11%, 35.89% 4.93%, 35.63% 4.91%, 38.13% 3.97%, 35.26% 4.88%, 35% 4.9%, 36.67% 3.94%, 34.64% 4.92%, 34.54% 5.12%, 34.64% 5.3%, 35.69% 7.59%, 35.01% 5.28%, 35.23% 5.31%, 36.43% 8.79%, 35.6% 5.34%, 35.83% 5.4%, 37.3% 11.36%, 36.19% 5.49%, 36.42% 5.58%, 37.81% 12.96%, 36.78% 5.72%, 37% 5.85%, 38.08% 12.87%, 37.37% 6.05%, 37.59% 6.21%, 38.53% 15.32%, 37.96% 6.46%, 38.18% 6.66%, 38.82% 15.44%, 38.55% 6.97%, 38.77% 7.2%, 39.14% 17.54%, 39.13% 7.56%, 39.35% 7.83%, 39.41% 19.48%, 39.72% 8.25%, 39.94% 8.55%, 39.77% 19.54%, 40.31% 9.03%, 40.53% 9.36%, 40.1% 20.7%, 40.89% 9.89%, 41.12% 10.27%, 40.54% 21.02%, 41.48% 10.85%, 41.7% 11.26%, 40.76% 23.54%, 42.07% 11.9%, 42.29% 12.35%, 41.19% 24.44%, 42.66% 13.05%, 42.88% 13.53%, 41.62% 25.6%, 43.25% 14.28%, 43.47% 14.8%, 42.16% 26.39%, 43.84% 15.61%, 44.06% 16.16%, 42.76% 27.07%, 44.43% 17.03%, 44.65% 17.62%, 43.67% 26.49%, 45.02% 18.54%, 45.24% 19.17%, 44.22% 27.91%, 45.61% 20.14%, 45.83% 20.81%, 44.93% 28.82%, 46.2% 21.84%);
+    }
+
+    &[data-n="4"] {
+      clip-path: polygon(50% 32.69%, 50.08% 23%, 51.94% 27.27%, 50.04% 22.08%, 50% 21.48%, 52.1% 26.14%, 49.96% 20.6%, 49.92% 20.02%, 52.84% 26.14%, 49.88% 19.18%, 49.84% 18.63%, 52.46% 24.15%, 49.8% 17.82%, 49.76% 17.3%, 53.04% 23.94%, 49.72% 16.53%, 49.67% 16.03%, 52.92% 22.55%, 49.63% 15.3%, 49.59% 14.83%, 53.08% 21.72%, 49.55% 14.14%, 49.51% 13.69%, 52.77% 20.09%, 49.47% 13.04%, 49.43% 12.61%, 53.01% 19.51%, 49.39% 12%, 49.35% 11.6%, 52.71% 18.03%, 49.31% 11.03%, 49.26% 10.65%, 52.66% 17.06%, 49.22% 10.12%, 49.18% 9.77%, 52.48% 15.92%, 49.14% 9.27%, 49.1% 8.95%, 52.24% 14.73%, 49.06% 8.49%, 49.02% 8.2%, 51.85% 13.34%, 48.98% 7.77%, 48.94% 7.5%, 51.33% 11.83%, 48.9% 7.12%, 48.85% 6.87%, 51.1% 10.84%, 48.81% 6.53%, 48.77% 6.31%, 51.09% 10.26%, 48.73% 6%, 48.69% 5.81%, 50.56% 8.93%, 48.65% 5.54%, 48.61% 5.37%, 50.16% 7.89%, 48.57% 5.14%, 48.52% 5%, 49.51% 6.57%, 48.48% 4.8%, 48.35% 4.81%, 48.23% 4.91%, 47.73% 7.05%, 48.27% 5.1%, 48.28% 5.24%, 47.36% 8.53%, 48.32% 5.47%, 48.33% 5.63%, 47.13% 9.61%, 48.37% 5.9%, 48.38% 6.1%, 46.79% 11.01%, 48.42% 6.4%, 48.42% 6.62%, 46.83% 11.5%, 48.46% 6.97%, 48.47% 7.21%, 46.72% 12.48%, 48.51% 7.59%, 48.52% 7.86%, 46.38% 14.04%, 48.56% 8.28%, 48.57% 8.58%, 46.13% 15.45%, 48.61% 9.04%, 48.62% 9.36%, 46.01% 16.62%, 48.66% 9.86%, 48.67% 10.2%, 45.94% 17.74%, 48.71% 10.74%, 48.71% 11.11%, 45.99% 18.67%, 48.75% 11.69%, 48.76% 12.08%, 45.82% 20.14%, 48.8% 12.7%, 48.81% 13.12%, 46.11% 20.65%, 48.85% 13.77%, 48.86% 14.22%, 45.94% 22.28%, 48.9% 14.91%, 48.91% 15.38%, 46.18% 23.05%, 48.95% 16.11%, 48.96% 16.61%, 46.17% 24.44%, 49% 17.38%, 49.01% 17.9%, 46.78% 24.54%, 49.04% 18.71%, 49.05% 19.26%, 46.55% 26.55%, 49.09% 20.1%, 49.1% 20.68%, 47.32% 26.43%, 49.14% 21.56%, 49.15% 22.16%, 47.57% 27.53%, 49.19% 23.08%);
+    }
+
+    &[data-n="5"] {
+      clip-path: polygon(50% 32.69%, 53.12% 21.56%, 54.47% 27.67%, 53.41% 20.5%, 53.59% 19.81%, 55.17% 26.96%, 53.88% 18.81%, 54.06% 18.16%, 56.04% 27.07%, 54.35% 17.21%, 54.53% 16.6%, 56.67% 26.51%, 54.82% 15.7%, 54.99% 15.13%, 57.16% 25.53%, 55.28% 14.29%, 55.46% 13.75%, 57.59% 24.56%, 55.75% 12.96%, 55.92% 12.46%, 57.61% 21.78%, 56.22% 11.73%, 56.39% 11.26%, 58.06% 21.13%, 56.68% 10.58%, 56.86% 10.15%, 58.46% 20.57%, 57.15% 9.52%, 57.32% 9.13%, 58.6% 18.59%, 57.61% 8.56%, 57.79% 8.2%, 58.92% 18.02%, 58.08% 7.68%, 58.25% 7.36%, 59.21% 17.55%, 58.54% 6.9%, 58.71% 6.61%, 59.35% 15.98%, 59% 6.2%, 59.18% 5.95%, 59.57% 15.8%, 59.47% 5.6%, 59.64% 5.38%, 59.7% 14.46%, 59.93% 5.08%, 60.1% 4.89%, 59.88% 11.21%, 60.39% 4.65%, 60.56% 4.5%, 60.1% 10.56%, 60.85% 4.31%, 61.02% 4.19%, 60.44% 8.83%, 61.31% 4.05%, 61.49% 3.96%, 60.74% 8.19%, 61.78% 3.88%, 61.95% 3.83%, 61.43% 5.97%, 62.24% 3.8%, 62.31% 3.61%, 62.22% 3.42%, 60.33% 2.93%, 61.93% 3.45%, 61.71% 3.46%, 58.37% 3.1%, 61.42% 3.54%, 61.2% 3.6%, 57.6% 3.86%, 60.91% 3.73%, 60.7% 3.83%, 56.17% 4.8%, 60.4% 4.02%, 60.18% 4.16%, 55.57% 5.79%, 59.89% 4.4%, 59.67% 4.57%, 53.32% 7.45%, 59.38% 4.87%, 59.17% 5.09%, 52.43% 8.85%, 58.87% 5.44%, 58.66% 5.69%, 52.36% 9.88%, 58.36% 6.1%, 58.15% 6.38%, 51.44% 11.41%, 57.86% 6.84%, 57.64% 7.17%, 51.27% 12.51%, 57.35% 7.68%, 57.13% 8.05%, 51.08% 13.62%, 56.84% 8.62%, 56.63% 9.02%, 50.08% 15.44%, 56.33% 9.64%, 56.12% 10.07%, 50% 16.55%, 55.83% 10.75%, 55.61% 11.22%, 49.89% 17.69%, 55.32% 11.95%, 55.11% 12.46%, 48.58% 20.07%, 54.82% 13.25%, 54.6% 13.79%, 48.38% 21.43%, 54.31% 14.63%, 54.1% 15.21%, 48.23% 22.78%, 53.81% 16.11%, 53.59% 16.72%, 48.36% 23.86%, 53.3% 17.67%, 53.09% 18.33%, 48.93% 24.48%, 52.8% 19.33%, 52.58% 20.02%, 49.06% 25.63%, 52.29% 21.07%);
+    }
+
+    &[data-n="6"] {
+      clip-path: polygon(50% 32.69%, 57.36% 22.08%, 57.57% 31.09%, 58.12% 21.15%, 58.61% 20.56%, 58.7% 31.07%, 59.37% 19.71%, 59.85% 19.18%, 59.75% 31.25%, 60.61% 18.42%, 61.09% 17.94%, 60.74% 29.62%, 61.85% 17.26%, 62.33% 16.84%, 61.71% 28.3%, 63.09% 16.25%, 63.57% 15.88%, 62.58% 28.74%, 64.33% 15.37%, 64.81% 15.06%, 63.29% 29.91%, 65.57% 14.64%, 66.05% 14.38%, 64.01% 29.93%, 66.82% 14.05%, 67.3% 13.84%, 65.09% 27.32%, 68.06% 13.59%, 68.54% 13.44%, 65.94% 26.62%, 69.3% 13.28%, 69.78% 13.18%, 67.09% 24.72%, 70.55% 13.11%, 71.03% 13.06%, 67.96% 24.41%, 71.79% 13.07%, 72.28% 13.08%, 69.19% 23.05%, 73.04% 13.18%, 73.53% 13.24%, 70.04% 23.21%, 74.29% 13.43%, 74.79% 13.55%, 70.86% 23.56%, 75.55% 13.81%, 76.05% 13.99%, 72.42% 22.31%, 76.81% 14.35%, 77.31% 14.58%, 74.06% 21.33%, 78.07% 15.02%, 78.57% 15.31%, 75.55% 21.04%, 79.33% 15.83%, 79.84% 16.18%, 77.16% 20.84%, 80.6% 16.79%, 81.11% 17.2%, 79.64% 19.55%, 81.87% 17.9%, 82.14% 17.93%, 82.01% 17.57%, 80.92% 13.68%, 81.25% 16.87%, 80.74% 16.41%, 78.85% 9.89%, 79.98% 15.8%, 79.47% 15.4%, 76.7% 8.19%, 78.71% 14.87%, 78.2% 14.52%, 74.41% 7%, 77.43% 14.08%, 76.92% 13.79%, 71.77% 5.79%, 76.16% 13.44%, 75.64% 13.2%, 68.97% 5.07%, 74.88% 12.94%, 74.36% 12.76%, 67.21% 6.09%, 73.6% 12.58%, 73.07% 12.46%, 65.57% 7.17%, 72.31% 12.36%, 71.79% 12.3%, 63.13% 7.74%, 71.02% 12.29%, 70.5% 12.29%, 61.55% 9.02%, 69.73% 12.36%, 69.2% 12.42%, 59.05% 10.06%, 68.44% 12.58%, 67.91% 12.7%, 57.53% 11.59%, 67.15% 12.95%, 66.61% 13.13%, 54.84% 13.09%, 65.85% 13.46%, 65.32% 13.7%, 54.11% 14.86%, 64.56% 14.12%, 64.02% 14.41%, 54.28% 16.47%, 63.26% 14.92%, 62.72% 15.27%, 54.03% 17.98%, 61.96% 15.86%, 61.43% 16.28%, 52.69% 19.72%, 60.67% 16.95%, 60.13% 17.43%, 51.24% 21.6%, 59.37% 18.19%, 58.84% 18.72%, 51.09% 23.07%, 58.07% 19.57%, 57.54% 20.16%, 50.87% 24.53%, 56.78% 21.09%);
+    }
+
+    &[data-n="7"] {
+      clip-path: polygon(50% 32.69%, 59.81% 28.42%, 57.83% 37.5%, 60.86% 28.23%, 61.53% 28.12%, 58.73% 39.46%, 62.58% 28.03%, 63.25% 27.99%, 60.05% 39.39%, 64.29% 28.02%, 64.97% 28.05%, 60.63% 41.85%, 66.01% 28.19%, 66.69% 28.29%, 61.63% 42.7%, 67.74% 28.53%, 68.42% 28.7%, 63.78% 40.53%, 69.46% 29.06%, 70.14% 29.3%, 64.25% 43.02%, 71.19% 29.77%, 71.88% 30.08%, 65.67% 43.27%, 72.93% 30.66%, 73.61% 31.04%, 67.27% 43.41%, 74.66% 31.73%, 75.35% 32.19%, 68.25% 44.99%, 76.4% 32.98%, 77.1% 33.52%, 70.58% 44.4%, 78.14% 34.42%, 78.84% 35.03%, 71.49% 46.48%, 79.89% 36.04%, 80.59% 36.72%, 73.55% 46.97%, 81.64% 37.85%, 82.34% 38.6%, 75.49% 47.98%, 83.39% 39.83%, 84.09% 40.66%, 77.78% 48.81%, 85.14% 42.01%, 85.84% 42.91%, 80.38% 49.57%, 86.89% 44.36%, 87.6% 45.34%, 81.99% 51.83%, 88.65% 46.9%, 89.36% 47.96%, 84.69% 53.09%, 90.4% 49.63%, 91.11% 50.76%, 88.09% 53.92%, 92.16% 52.54%, 92.87% 53.74%, 91.01% 55.6%, 93.92% 55.63%, 94.3% 56.02%, 94.12% 55.39%, 94.43% 50.85%, 93.07% 53.5%, 92.38% 52.25%, 93.39% 45.94%, 91.33% 50.47%, 90.64% 49.3%, 92.5% 40.22%, 89.59% 47.63%, 88.9% 46.53%, 90.94% 35.52%, 87.85% 44.97%, 87.16% 43.94%, 88.63% 32.75%, 86.11% 42.49%, 85.42% 41.53%, 86.62% 28.3%, 84.37% 40.19%, 83.67% 39.3%, 84.21% 24.52%, 82.62% 38.07%, 81.92% 37.26%, 81.46% 21.59%, 80.87% 36.13%, 80.17% 35.39%, 78.48% 18.64%, 79.12% 34.38%, 78.42% 33.71%, 75.51% 18.51%, 77.37% 32.8%, 76.67% 32.2%, 72.06% 15.65%, 75.62% 31.41%, 74.91% 30.88%, 69.17% 16.19%, 73.86% 30.2%, 73.15% 29.75%, 65.95% 15.72%, 72.1% 29.17%, 71.38% 28.79%, 62.92% 16%, 70.33% 28.33%, 69.61% 28.02%, 61.42% 18.55%, 68.57% 27.66%, 67.84% 27.43%, 57.51% 17.85%, 66.79% 27.19%, 66.07% 27.03%, 55.66% 19.64%, 65.02% 26.89%, 64.29% 26.81%, 55.19% 22.16%, 63.24% 26.78%, 62.51% 26.78%, 53.3% 23.48%, 61.46% 26.86%, 60.73% 26.93%, 53.01% 25.41%, 59.68% 27.13%);
+    }
+
+    &[data-n="8"] {
+      clip-path: polygon(50% 32.69%, 55.72% 37.58%, 52.54% 41.75%, 56.36% 38.38%, 56.79% 38.9%, 52.58% 43.98%, 57.43% 39.79%, 57.86% 40.39%, 52.64% 46.23%, 58.5% 41.39%, 58.93% 42.05%, 53.59% 47.61%, 59.58% 43.16%, 60.01% 43.9%, 53.58% 50.15%, 60.65% 45.11%, 61.09% 45.92%, 54.54% 51.89%, 61.73% 47.23%, 62.17% 48.11%, 54.79% 54.46%, 62.82% 49.53%, 63.26% 50.49%, 55.95% 56.42%, 63.9% 52.01%, 64.34% 53.04%, 57.14% 58.58%, 64.99% 54.66%, 65.43% 55.76%, 59.44% 60.14%, 66.07% 57.49%, 66.52% 58.66%, 59.11% 63.83%, 67.16% 60.5%, 67.6% 61.74%, 60.26% 66.64%, 68.25% 63.68%, 68.69% 64.99%, 61.97% 69.29%, 69.34% 67.04%, 69.78% 68.42%, 64.41% 71.71%, 70.43% 70.57%, 70.87% 72.02%, 65.3% 75.31%, 71.52% 74.27%, 71.96% 75.8%, 66.73% 78.77%, 72.61% 78.15%, 73.05% 79.75%, 68.52% 82.23%, 73.7% 82.21%, 74.15% 83.88%, 70.04% 86.05%, 74.79% 86.44%, 75.24% 88.18%, 72.16% 89.75%, 75.88% 90.85%, 76.33% 92.65%, 74.49% 93.56%, 76.97% 95.43%, 77.27% 96.12%, 77.22% 95.3%, 78.41% 91.59%, 76.58% 92.53%, 76.16% 90.7%, 78.57% 86.38%, 75.52% 88.03%, 75.1% 86.27%, 78.52% 81.39%, 74.45% 83.71%, 74.04% 82.02%, 77.87% 76.87%, 73.39% 79.56%, 72.98% 77.94%, 77.48% 72.3%, 72.33% 75.58%, 71.91% 74.03%, 76.72% 68.08%, 71.27% 71.78%, 70.85% 70.29%, 75.43% 64.37%, 70.2% 68.14%, 69.79% 66.73%, 75.63% 59.67%, 69.14% 64.68%, 68.72% 63.34%, 75.09% 55.56%, 68.08% 61.4%, 67.66% 60.12%, 74% 51.98%, 67.01% 58.28%, 66.59% 57.07%, 71.5% 49.87%, 65.95% 55.34%, 65.53% 54.2%, 71.42% 45.5%, 64.88% 52.57%, 64.46% 51.49%, 70.27% 42.21%, 63.81% 49.97%, 63.39% 48.96%, 69.03% 39.04%, 62.75% 47.54%, 62.32% 46.6%, 66.97% 37.06%, 61.68% 45.29%, 61.25% 44.41%, 65.43% 34.39%, 60.6% 43.2%, 60.17% 42.39%, 63.13% 33.25%, 59.53% 41.29%, 59.1% 40.55%, 61.43% 30.96%, 58.45% 39.54%, 58.01% 38.87%, 59.17% 30.4%, 57.37% 37.97%, 56.93% 37.36%, 57.02% 30.35%, 56.28% 36.57%);
+    }
+
+    &[data-n="9"] {
+      clip-path: polygon(50% 32.69%, 43.72% 36.57%, 42.92% 29.94%, 43.07% 37.36%, 42.63% 37.97%, 40.76% 30.11%, 41.99% 38.87%, 41.55% 39.54%, 39.05% 32.27%, 40.9% 40.55%, 40.47% 41.29%, 36.42% 32.28%, 39.83% 42.39%, 39.4% 43.2%, 34.59% 34.42%, 38.75% 44.41%, 38.32% 45.29%, 32.94% 36.93%, 37.68% 46.6%, 37.25% 47.54%, 31.89% 40.26%, 36.61% 48.96%, 36.19% 49.97%, 30.76% 43.44%, 35.54% 51.49%, 35.12% 52.57%, 28.47% 45.38%, 34.47% 54.2%, 34.05% 55.34%, 27.02% 48.42%, 33.41% 57.07%, 32.99% 58.28%, 27.19% 53.05%, 32.34% 60.12%, 31.92% 61.4%, 26.05% 56.5%, 31.28% 63.34%, 30.86% 64.68%, 24.89% 60.07%, 30.21% 66.73%, 29.8% 68.14%, 23.47% 63.58%, 29.15% 70.29%, 28.73% 71.78%, 23.67% 68.35%, 28.09% 74.03%, 27.67% 75.58%, 23.33% 72.82%, 27.02% 77.94%, 26.61% 79.56%, 21.74% 76.63%, 25.96% 82.02%, 25.55% 83.71%, 21.64% 81.49%, 24.9% 86.27%, 24.48% 88.03%, 21.26% 86.29%, 23.84% 90.7%, 23.42% 92.53%, 21.65% 91.62%, 22.78% 95.3%, 22.73% 96.12%, 23.03% 95.43%, 25.45% 93.53%, 23.67% 92.65%, 24.12% 90.85%, 28% 89.84%, 24.76% 88.18%, 25.21% 86.44%, 29.79% 85.96%, 25.85% 83.88%, 26.3% 82.21%, 31.88% 82.45%, 26.95% 79.75%, 27.39% 78.15%, 32.45% 78.3%, 28.04% 75.8%, 28.48% 74.27%, 34.3% 75.07%, 29.13% 72.02%, 29.57% 70.57%, 36.72% 72.41%, 30.22% 68.42%, 30.66% 67.04%, 37.5% 68.95%, 31.31% 64.99%, 31.75% 63.68%, 38.55% 65.84%, 32.4% 61.74%, 32.84% 60.5%, 39.63% 62.95%, 33.48% 58.66%, 33.93% 57.49%, 42.15% 61.31%, 34.57% 55.76%, 35.01% 54.66%, 42.98% 58.67%, 35.66% 53.04%, 36.1% 52.01%, 42.89% 55.47%, 36.74% 50.49%, 37.18% 49.53%, 44.14% 53.53%, 37.83% 48.11%, 38.27% 47.23%, 45.57% 51.99%, 38.91% 45.92%, 39.35% 45.11%, 46.39% 50.13%, 39.99% 43.9%, 40.42% 43.16%, 47.07% 48.3%, 41.07% 42.05%, 41.5% 41.39%, 46.56% 45.32%, 42.14% 40.39%, 42.57% 39.79%, 47.58% 44.18%, 43.21% 38.9%, 43.64% 38.38%, 47.68% 42.04%, 44.28% 37.58%);
+    }
+  }
+
+  .shore {
+    background: var(--color-palm);
+    border-radius: 50%;
+
+    &[data-side="start"] {
+      --x: -80;
+      --y: 846;
+      --w: 780;
+      --h: 150;
+    }
+
+    &[data-side="end"] {
+      --x: 920;
+      --y: 856;
+      --w: 780;
+      --h: 140;
+    }
+  }
+
+  .title {
+    --x: 0;
+    --y: 220;
+    --w: 1600;
+    --h: 280;
+
+    display: grid;
+    place-items: center;
+    filter: var(--bleed, none);
+  }
+
+  .title-word {
+    position: relative;
+    display: grid;
+    padding-inline: 0.12em;
+    font: italic 900 calc(var(--title-size, 210) * var(--u)) / var(--leading-tight) var(--font-chrome);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    & :where(.title-depth, .title-edge, .title-face) {
+      position: relative;
+      grid-area: 1 / 1;
+    }
+  }
+
+  .title-depth {
+    color: var(--color-depth);
+    -webkit-text-stroke: 0.09em var(--color-depth);
+    paint-order: stroke fill;
+    translate: 0 0.03em;
+    text-shadow:
+      0 0.015em 0 var(--color-depth-2),
+      0 0.03em 0 var(--color-depth-2),
+      0 0.045em 0 var(--color-depth-3),
+      0 0.06em 0 var(--color-depth-3),
+      0 0.075em 0 var(--color-depth),
+      0 0.09em 0.02em var(--color-depth),
+      0 0.12em 0.2em var(--color-title-glow),
+      0 0 0.35em var(--color-title-glow);
+  }
+
+  .title-edge {
+    color: var(--color-chrome-edge);
+    -webkit-text-stroke: 0.045em var(--color-chrome-edge);
+    paint-order: stroke fill;
+  }
+
+  .title-face {
+    background-image:
+      linear-gradient(100deg, transparent 44%, var(--color-glint) 50%, transparent 56%),
+      linear-gradient(var(--color-chrome-1) 22%, var(--color-chrome-2) 36%, var(--color-chrome-3) 50%, var(--color-chrome-4) 58%, var(--color-chrome-horizon) 58.5%, var(--color-chrome-5) 63%, var(--color-chrome-6) 74%, var(--color-chrome-7) 84%, var(--color-chrome-1) 92%);
+    background-size: 300% 100%, 100% 100%;
+    background-position: 100% 0, 0 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-stroke: 0.008em var(--color-chrome-line);
+    animation: glint var(--duration-glint) ease-in-out infinite;
+  }
+
+  .sparkle {
+    position: absolute;
+    inline-size: var(--size);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    background: radial-gradient(circle, var(--color-sparkle) 0 5%, var(--color-sparkle-glow) 14%, transparent 60%);
+    scale: 0;
+    animation: sparkle var(--duration-glint) ease-out infinite;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--color-sparkle);
+      clip-path: polygon(50% 0, 53.5% 46.5%, 100% 50%, 53.5% 53.5%, 50% 100%, 46.5% 53.5%, 0 50%, 46.5% 46.5%);
+    }
+
+    &[data-n="1"] {
+      --size: 0.6em;
+
+      inset-inline-start: 16%;
+      inset-block-start: 26%;
+    }
+
+    &[data-n="2"] {
+      --size: 0.45em;
+
+      inset-inline-start: 87%;
+      inset-block-start: 68%;
+      animation-delay: calc(var(--duration-glint) * 0.12);
+    }
+  }
+
+  .tagline {
+    --x: 0;
+    --y: 440;
+    --w: 1600;
+    --h: 180;
+
+    color: var(--color-neon-core);
+    font: calc(var(--tagline-size, 110) * var(--u)) / 1.6 var(--font-neon);
+    text-align: center;
+    white-space: nowrap;
+    text-shadow:
+      0 0 0.03em var(--color-neon-core),
+      0 0 0.07em var(--color-neon),
+      0 0 0.16em var(--color-neon),
+      0 0 0.32em var(--color-neon-deep),
+      0 0.06em 0.12em var(--color-neon-shadow);
+    translate: calc(150 * var(--u)) 0;
+    rotate: -5deg;
+    filter: var(--bleed, none);
+  }
+
+  .vhs {
+    pointer-events: none;
+
+    [data-vhs="off"] & {
+      display: none;
+    }
+  }
+
+  .scanlines {
+    --x: 0;
+    --y: 0;
+    --w: 1600;
+    --h: 900;
+
+    background:
+      repeating-linear-gradient(var(--color-scanline) 0 calc(1.5 * var(--u)), transparent calc(1.5 * var(--u)) calc(4.5 * var(--u))),
+      radial-gradient(ellipse at center, transparent 60%, var(--color-vignette));
+  }
+
+  .tracking {
+    --x: 0;
+    --y: -80;
+    --w: 1600;
+    --h: 60;
+
+    background:
+      repeating-linear-gradient(90deg, var(--color-tracking) 0 calc(3 * var(--u)), transparent calc(3 * var(--u)) calc(11 * var(--u))),
+      linear-gradient(transparent, var(--color-tracking) 50%, transparent);
+    backdrop-filter: blur(calc(1.5 * var(--u))) brightness(1.08) saturate(1.15);
+    animation: tracking var(--duration-tracking) linear infinite;
+  }
+
+  [data-vhs="on"] .scene {
+    animation: wobble var(--duration-tracking) steps(1) infinite;
+  }
+
+  .osd {
+    color: var(--color-osd);
+    font: calc(50 * var(--u)) / var(--leading-tight) var(--font-osd);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: calc(2 * var(--u));
+    text-shadow: calc(3 * var(--u)) calc(3 * var(--u)) 0 var(--color-osd-shadow);
+
+    &[data-corner="start"] {
+      --x: 70;
+      --y: 56;
+      --w: 400;
+      --h: 60;
+    }
+
+    &[data-corner="end"] {
+      --x: 1130;
+      --y: 790;
+      --w: 400;
+      --h: 60;
+
+      text-align: end;
+    }
+  }
+
+  .field {
+    display: grid;
+    flex: 1 1 12rem;
+    gap: var(--space-2xs);
+
+    & span {
+      color: var(--color-ui-muted);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    & input {
+      min-block-size: var(--size-target);
+      padding-inline: var(--space-s);
+      border: var(--border-width) solid var(--color-ui-line);
+      border-radius: var(--radius-s);
+      background: var(--color-panel);
+      color: var(--color-ui-ink);
+      font-size: var(--text-m);
+
+      &:focus-visible {
+        border-color: var(--color-teal);
+        outline: var(--focus-width) solid var(--color-focus);
+        outline-offset: var(--border-width);
+      }
+    }
+  }
+
+  .toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-block-size: var(--size-target);
+    color: var(--color-ui-muted);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+
+    & input {
+      inline-size: var(--size-check);
+      block-size: var(--size-check);
+      margin: 0;
+      accent-color: var(--color-pink);
+    }
+
+    & input:focus-visible {
+      outline: var(--focus-width) solid var(--color-focus);
+      outline-offset: var(--border-width);
+    }
+  }
+
+  .save {
+    min-block-size: var(--size-target);
+    padding-inline: var(--space-l);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--color-pink-deep);
+    color: var(--color-ui-ink);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 0 0 var(--halo-size) var(--color-pink-halo);
+    cursor: pointer;
+    transition: box-shadow var(--duration-fast) ease;
+
+    &:focus-visible {
+      outline: var(--focus-width) solid var(--color-focus);
+      outline-offset: var(--focus-width);
+    }
+
+    &[aria-disabled="true"] {
+      cursor: progress;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        box-shadow: 0 0 calc(var(--halo-size) * 1.6) var(--color-pink);
+      }
+    }
+  }
+
+  .save-status {
+    flex-basis: 100%;
+    min-block-size: calc(var(--text-s) * var(--leading-body));
+    margin: 0;
+    color: var(--color-ui-muted);
+    font-size: var(--text-s);
+    text-align: center;
+  }
+
+  @keyframes twinkle {
+    to {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes shimmer {
+    to {
+      opacity: 0.78;
+      translate: calc(3 * var(--u)) 0;
+    }
+  }
+
+  @keyframes glitter {
+    to {
+      opacity: 0.55;
+    }
+  }
+
+  @keyframes sway {
+    from {
+      rotate: -1.4deg;
+    }
+
+    to {
+      rotate: 1.4deg;
+    }
+  }
+
+  @keyframes glint {
+    0% {
+      background-position: 100% 0, 0 0;
+    }
+
+    22%,
+    100% {
+      background-position: 0% 0, 0 0;
+    }
+  }
+
+  @keyframes sparkle {
+    0%,
+    3% {
+      scale: 0;
+      rotate: 0deg;
+    }
+
+    8% {
+      scale: 1;
+      rotate: 45deg;
+    }
+
+    15%,
+    100% {
+      scale: 0;
+      rotate: 90deg;
+    }
+  }
+
+  @keyframes tracking {
+    0% {
+      translate: 0 0;
+    }
+
+    22%,
+    100% {
+      translate: 0 calc(1060 * var(--u));
+    }
+  }
+
+  @keyframes wobble {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+
+    7% {
+      translate: calc(4 * var(--u)) 0;
+    }
+
+    8.5% {
+      translate: calc(-3 * var(--u)) 0;
+    }
+
+    10% {
+      translate: calc(2 * var(--u)) 0;
+    }
+
+    11.5% {
+      translate: 0 0;
+    }
+  }
+}
+
+@layer utilities {
+  .visually-hidden {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: clip;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@layer overrides {
+  @media (hover: hover) {
+    .poster:hover :where(*),
+    .poster:hover :where(*)::before {
+      animation-play-state: paused;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .poster :where(*),
+    .poster :where(*)::before {
+      animation: none;
+    }
+
+    .sparkle {
+      scale: 0.8;
+      rotate: 45deg;
+    }
+
+  }
+
+  @media (forced-colors: active) {
+    :where(.field input, .toggle input, .save):focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}
